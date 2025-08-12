@@ -7,6 +7,7 @@ export default function OnboardingLayout() {
       <Stack.Screen name="validation" />
       <Stack.Screen name="reward" />
       <Stack.Screen name="paywall" />
+      <Stack.Screen name="testhome" />
     </Stack>
   );
 }
