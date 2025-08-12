@@ -1,54 +1,58 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { Image } from "expo-image";
+import { StyleSheet } from "react-native";
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import ParallaxScrollView from "@/components/ParallaxScrollView";
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
 
 export default function HomeScreen() {
   return (
     <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
+      headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
       headerImage={
         <Image
-          source={require('@/assets/images/partial-react-logo.png')}
+          source={require("@/assets/images/partial-react-logo.png")}
           style={styles.reactLogo}
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
+      }
+    >
+      <ThemedView>
+        <ThemedText type="title">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa, non
+          enim eveniet numquam officia reprehenderit dicta molestias maxime,
+          amet a, at fugit blanditiis. Dolor necessitatibus non reprehenderit
+          aliquam quos enim? Harum, esse voluptatibus tempora nobis natus
+          consequatur odit quidem necessitatibus. Et exercitationem mollitia eos
+          non illo, nostrum quos dolores corrupti qui ullam pariatur sunt quas
+          alias ut eaque dolorem ipsa! Quae dolorem consequatur non beatae, eum
+          recusandae ducimus facere ex repellendus dolores tenetur neque
+          voluptatem autem cupiditate minima? Nisi tenetur blanditiis ratione
+          reiciendis rerum neque eaque repellat, animi dolor aut. Repudiandae
+          sequi velit necessitatibus nemo soluta molestias accusamus alias quae
+          architecto nobis hic excepturi perspiciatis obcaecati reprehenderit
+          nam iusto exercitationem, distinctio ad, omnis reiciendis vitae
+          debitis itaque? Asperiores, consequatur quasi? Omnis, ratione. Ea
+          molestiae cumque dolor error voluptate aliquam explicabo rem,
+          laboriosam laborum commodi maxime ut vero aliquid nostrum ducimus
+          mollitia veniam reiciendis? Quod perspiciatis minima architecto ipsum.
+          Doloremque, nobis. Accusamus rem dolor dolorem, illo ipsum blanditiis
+          eveniet impedit fugiat saepe possimus, sapiente a delectus, corporis
+          quam. Maiores aperiam iure enim deleniti facilis quaerat, quisquam
+          delectus nisi suscipit magni earum. Sunt odit dicta quisquam quae aut?
+          Quae ipsa labore cum nostrum cupiditate distinctio excepturi
+          voluptatibus repellat quisquam! Ipsa, est quisquam laborum quasi
+          excepturi officia inventore odit velit voluptates dolores a. Aliquam
+          ut delectus totam repellat quisquam doloribus, asperiores cum
+          recusandae reiciendis. Ullam optio earum quaerat, corporis, autem
+          recusandae asperiores quas magni sequi iusto error nemo aliquid
+          praesentium minus magnam natus. Vel quam vero, minus unde nesciunt
+          facilis eum distinctio sed provident ipsum, temporibus quia molestias
+          totam dolor! Impedit quia quasi doloremque repellat voluptatum minus
+          deleniti quidem harum, quaerat cumque ipsum? Ipsam accusantium non
+          ducimus porro harum! Eaque voluptatem aperiam tempora accusantium
+          provident laboriosam voluptates doloremque consequatur temporibus fuga
+          iste iusto voluptatibus deleniti laborum pariatur, animi possimus odio
+          nemo commodi nesciunt.
         </ThemedText>
       </ThemedView>
     </ParallaxScrollView>
@@ -57,8 +61,8 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 8,
   },
   stepContainer: {
@@ -70,6 +74,6 @@ const styles = StyleSheet.create({
     width: 290,
     bottom: 0,
     left: 0,
-    position: 'absolute',
+    position: "absolute",
   },
 });
