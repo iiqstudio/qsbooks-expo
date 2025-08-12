@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
+import { useRouter } from "expo-router";
 import React from "react";
 import {
   Dimensions,
@@ -18,10 +18,13 @@ type NavigationProps = {
 const EMOTION_TAGS = ["Anxious", "Grateful", "Overwhelmed", "Hopeful", "Lost"];
 
 const OnboardingNewScreen = () => {
-  const navigation = useNavigation<NavigationProps>();
+  const router = useRouter();
 
   const handleTagPress = (emotion: string) => {
-    navigation.navigate("ValidationScreen", { emotion: emotion });
+    router.push({
+      pathname: "/ValidationScreen",
+      params: { emotion: emotion },
+    });
   };
 
   return (

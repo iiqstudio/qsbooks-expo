@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   SafeAreaView,
@@ -15,7 +15,7 @@ const verseData = {
 };
 
 const RewardScreen = () => {
-  const navigation = useNavigation();
+  const router = useRouter();
   const [isButtonActive, setIsButtonActive] = useState(false);
 
   const handleInteractionPress = () => {
@@ -26,7 +26,7 @@ const RewardScreen = () => {
 
   const handleContinuePress = () => {
     console.log("Переход на экран Paywall...");
-    navigation.navigate("PaywallScreen");
+    router.push("/PaywallScreen");
   };
 
   return (

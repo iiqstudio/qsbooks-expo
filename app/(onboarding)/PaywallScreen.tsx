@@ -1,4 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   SafeAreaView,
@@ -12,16 +13,21 @@ type Plan = "annual" | "monthly";
 
 const PaywallScreen = () => {
   const navigation = useNavigation();
+  const router = useRouter();
   const [selectedPlan, setSelectedPlan] = useState<Plan>("annual");
 
   const userName = "Eli";
 
+  const navigateToTestHome = () => {
+    router.replace("/TestHome");
+  };
+
   const handleStartTrial = () => {
-    navigation.navigate("TestHome");
+    navigateToTestHome();
   };
 
   const handleMaybeLater = () => {
-    navigation.navigate("TestHome");
+    navigateToTestHome();
   };
 
   const PlanOption = ({

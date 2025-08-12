@@ -1,37 +1,30 @@
-import React, {useEffect} from 'react';
-import {StyleSheet, View, Text, SafeAreaView} from 'react-native';
-import {useNavigation, useRoute, RouteProp} from '@react-navigation/native';
+import { useLocalSearchParams, useRouter } from "expo-router";
+import React, { useEffect } from "react";
+import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 
-type RootStackParamList = {
-  Validation: {emotion: string};
-};
-
-type ValidationScreenRouteProp = RouteProp<RootStackParamList, 'Validation'>;
-
-const emotionHeadings: {[key: string]: string} = {
-  Anxious: 'For moments of anxiety, there is a word of peace.',
-  Grateful: 'For moments of gratitude, there is a word of praise.',
-  Overwhelmed: 'For moments of being overwhelmed, there is a word of calm.',
-  Hopeful: 'For moments of hope, there is a word of encouragement.',
-  Lost: 'For moments of feeling lost, there is a word of guidance.',
-  Default: 'For this moment, there is a word for you.',
+const emotionHeadings: { [key: string]: string } = {
+  Anxious: "For moments of anxiety, there is a word of peace.",
+  Grateful: "For moments of gratitude, there is a word of praise.",
+  Overwhelmed: "For moments of being overwhelmed, there is a word of calm.",
+  Hopeful: "For moments of hope, there is a word of encouragement.",
+  Lost: "For moments of feeling lost, there is a word of guidance.",
+  Default: "For this moment, there is a word for you.",
 };
 
 const ValidationScreen = () => {
-  const navigation = useNavigation();
-  const route = useRoute<ValidationScreenRouteProp>();
+  const router = useRouter();
+  const { emotion } = useLocalSearchParams<{ emotion: string }>();
 
-  const emotion = route.params?.emotion || 'Default';
-  const headingText = emotionHeadings[emotion] || emotionHeadings.Default;
+  const headingText =
+    emotionHeadings[emotion || "Default"] || emotionHeadings.Default;
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      console.log('Переход на Screen 3...');
-      navigation.navigate('RewardScreen');
+      router.replace("/RewardScreen");
     }, 2000);
 
     return () => clearTimeout(timer);
-  }, [navigation]);
+  }, []);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -52,31 +45,31 @@ const ValidationScreen = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
   },
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: 40,
   },
   statusText: {
     fontSize: 16,
-    color: '#8A8A8E',
+    color: "#8A8A8E",
     marginBottom: 24,
   },
   heading: {
     fontSize: 28,
-    fontWeight: 'bold',
-    color: '#212121',
-    textAlign: 'center',
+    fontWeight: "bold",
+    color: "#212121",
+    textAlign: "center",
     marginBottom: 40,
     lineHeight: 38,
   },
   blurredText: {
     fontSize: 16,
-    color: '#D1D1D6',
-    textAlign: 'center',
+    color: "#D1D1D6",
+    textAlign: "center",
     lineHeight: 24,
   },
 });
