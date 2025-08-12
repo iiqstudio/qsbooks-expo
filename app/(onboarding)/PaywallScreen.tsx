@@ -19,7 +19,7 @@ const PaywallScreen = () => {
   const userName = "Eli";
 
   const navigateToTestHome = () => {
-    router.replace("/TestHome");
+    router.replace("/(tabs)/home");
   };
 
   const handleStartTrial = () => {

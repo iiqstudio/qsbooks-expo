@@ -15,7 +15,7 @@ const getGreeting = () => {
   return "Good evening";
 };
 
-const TestHome = () => {
+const Home = () => {
   const router = useRouter();
 
   const userName = "Sarah";
@@ -88,6 +88,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 20,
     justifyContent: "space-between",
+    paddingBottom: 40,
   },
   header: {
     flexDirection: "row",
@@ -135,7 +136,7 @@ const styles = StyleSheet.create({
   },
   graceContainer: {
     alignItems: "center",
-    paddingBottom: 20, // Отступ от нижнего края
+    paddingBottom: 20,
   },
   graceTitle: {
     fontSize: 17,
@@ -149,4 +150,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TestHome;
+export default Home;
