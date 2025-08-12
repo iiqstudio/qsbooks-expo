@@ -29,29 +29,24 @@ const TestHome = () => {
 
   const handleEmotionTagPress = (emotion: string) => {
     console.log(`Открытие модального окна для эмоции: ${emotion}`);
-    // Здесь будет логика открытия модального окна
   };
 
   const handleMomentOfPeacePress = () => {
     console.log("Открытие модального окна со случайным стихом...");
-    // Здесь будет логика открытия модального окна
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        {/* --- Верхний блок: Приветствие и Настройки --- */}
         <View style={styles.header}>
           <Text style={styles.greetingText}>
             {getGreeting()}, {userName}
           </Text>
           <TouchableOpacity onPress={handleSettingsPress}>
-            {/* Для иконки можно использовать библиотеку, но для простоты пока текст */}
             <Text style={styles.settingsIcon}>⚙️</Text>
           </TouchableOpacity>
         </View>
 
-        {/* --- Центральный блок: Эмоции --- */}
         <View style={styles.mainContent}>
           <Text style={styles.feelingPrompt}>How are you feeling today?</Text>
           <View style={styles.tagsContainer}>
@@ -72,7 +67,6 @@ const TestHome = () => {
           </TouchableOpacity>
         </View>
 
-        {/* --- Нижний блок: Дни благодати --- */}
         <View style={styles.graceContainer}>
           <Text style={styles.graceTitle}>Days of Grace</Text>
           <Text style={styles.graceSubtitle}>

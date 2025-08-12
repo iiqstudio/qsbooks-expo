@@ -21,7 +21,6 @@ const OnboardingNewScreen = () => {
   const navigation = useNavigation<NavigationProps>();
 
   const handleTagPress = (emotion: string) => {
-    console.log("Выбрана эмоция:", emotion);
     navigation.navigate("ValidationScreen", { emotion: emotion });
   };
 
