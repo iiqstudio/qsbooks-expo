@@ -1,6 +1,6 @@
+import * as Clipboard from "expo-clipboard";
 import React, { useEffect, useRef, useState } from "react";
 import {
-  Clipboard,
   SafeAreaView,
   Share,
   StyleSheet,
@@ -38,7 +38,7 @@ const Read = () => {
       });
   }, []);
 
-  const onMessage = (event) => {
+  const onMessage = (event: any) => {
     try {
       const data = JSON.parse(event.nativeEvent.data);
 
@@ -77,9 +77,10 @@ const Read = () => {
     }
   };
 
-  // --- Функции для кнопок меню ---
-  const handleCopy = () => {
-    if (selection.text) Clipboard.setString(selection.text);
+  const handleCopy = async () => {
+    if (selection.text) {
+      await Clipboard.setStringAsync(selection.text);
+    }
     setSelection((prev) => ({ ...prev, visible: false }));
   };
 
@@ -139,7 +140,6 @@ const Read = () => {
       })();
     `;
 
-  // --- Светлая тема по умолчанию ---
   const bgColor = "#fff";
   const textColor = "#000";
 
