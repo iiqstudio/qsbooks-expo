@@ -1,147 +1,37 @@
-import React from "react";
-import { StyleSheet } from "react-native";
-import { WebView } from "react-native-webview";
-
-const bookListEn = {
-  "1ch": require("../../assets/en/1ch.html"),
-  "1co": require("../../assets/en/1co.html"),
-  "1jo": require("../../assets/en/1jo.html"),
-  "1kgs": require("../../assets/en/1kgs.html"),
-  "1pe": require("../../assets/en/1pe.html"),
-  "2ch": require("../../assets/en/2ch.html"),
-  "2co": require("../../assets/en/2co.html"),
-  "2jo": require("../../assets/en/2jo.html"),
-  "2kgs": require("../../assets/en/2kgs.html"),
-  "2pe": require("../../assets/en/2pe.html"),
-  "2sm": require("../../assets/en/2sm.html"),
-  "2tm": require("../../assets/en/2tm.html"),
-  "2ts": require("../../assets/en/2ts.html"),
-  "3jo": require("../../assets/en/3jo.html"),
-  act: require("../../assets/en/act.html"),
-  am: require("../../assets/en/am.html"),
-  cl: require("../../assets/en/cl.html"),
-  dt: require("../../assets/en/dt.html"),
-  dn: require("../../assets/en/dn.html"),
-  ec: require("../../assets/en/ec.html"),
-  eph: require("../../assets/en/eph.html"),
-  ex: require("../../assets/en/ex.html"),
-  ez: require("../../assets/en/ez.html"),
-  ezr: require("../../assets/en/ezr.html"),
-  gl: require("../../assets/en/gl.html"),
-  gn: require("../../assets/en/gn.html"),
-  hb: require("../../assets/en/hb.html"),
-  hg: require("../../assets/en/hg.html"),
-  hk: require("../../assets/en/hk.html"),
-  ho: require("../../assets/en/ho.html"),
-  is: require("../../assets/en/is.html"),
-  jd: require("../../assets/en/jd.html"),
-  jm: require("../../assets/en/jm.html"),
-  job: require("../../assets/en/job.html"),
-  jo: require("../../assets/en/jo.html"),
-  jn: require("../../assets/en/jn.html"),
-  js: require("../../assets/en/js.html"),
-  jud: require("../../assets/en/jud.html"),
-  jr: require("../../assets/en/jr.html"),
-  lm: require("../../assets/en/lm.html"),
-  lk: require("../../assets/en/lk.html"),
-  lv: require("../../assets/en/lv.html"),
-  ml: require("../../assets/en/ml.html"),
-  mi: require("../../assets/en/mi.html"),
-  mk: require("../../assets/en/mk.html"),
-  mt: require("../../assets/en/mt.html"),
-  na: require("../../assets/en/na.html"),
-  ne: require("../../assets/en/ne.html"),
-  nm: require("../../assets/en/nm.html"),
-  ob: require("../../assets/en/ob.html"),
-  ph: require("../../assets/en/ph.html"),
-  phm: require("../../assets/en/phm.html"),
-  prv: require("../../assets/en/prv.html"),
-  ps: require("../../assets/en/ps.html"),
-  re: require("../../assets/en/re.html"),
-  rm: require("../../assets/en/rm.html"),
-  rt: require("../../assets/en/rt.html"),
-  so: require("../../assets/en/so.html"),
-  tt: require("../../assets/en/tt.html"),
-  zc: require("../../assets/en/zc.html"),
-  zp: require("../../assets/en/zp.html"),
-};
-
-const bookListRu = {
-  "1ch": require("../../assets/ru/1ch.html"),
-  "1co": require("../../assets/ru/1co.html"),
-  "1jo": require("../../assets/ru/1jo.html"),
-  "1kgs": require("../../assets/ru/1kgs.html"),
-  "1pe": require("../../assets/ru/1pe.html"),
-  "2ch": require("../../assets/ru/2ch.html"),
-  "2co": require("../../assets/ru/2co.html"),
-  "2jo": require("../../assets/ru/2jo.html"),
-  "2kgs": require("../../assets/ru/2kgs.html"),
-  "2pe": require("../../assets/ru/2pe.html"),
-  "2sm": require("../../assets/ru/2sm.html"),
-  "2tm": require("../../assets/ru/2tm.html"),
-  "2ts": require("../../assets/ru/2ts.html"),
-  "3jo": require("../../assets/ru/3jo.html"),
-  act: require("../../assets/ru/act.html"),
-  am: require("../../assets/ru/am.html"),
-  cl: require("../../assets/ru/cl.html"),
-  dt: require("../../assets/ru/dt.html"),
-  dn: require("../../assets/ru/dn.html"),
-  ec: require("../../assets/ru/ec.html"),
-  eph: require("../../assets/ru/eph.html"),
-  ex: require("../../assets/ru/ex.html"),
-  ez: require("../../assets/ru/ez.html"),
-  ezr: require("../../assets/ru/ezr.html"),
-  gl: require("../../assets/ru/gl.html"),
-  gn: require("../../assets/ru/gn.html"),
-  hb: require("../../assets/ru/hb.html"),
-  hg: require("../../assets/ru/hg.html"),
-  hk: require("../../assets/ru/hk.html"),
-  ho: require("../../assets/ru/ho.html"),
-  is: require("../../assets/ru/is.html"),
-  jd: require("../../assets/ru/jd.html"),
-  jm: require("../../assets/ru/jm.html"),
-  job: require("../../assets/ru/job.html"),
-  jo: require("../../assets/ru/jo.html"),
-  jn: require("../../assets/ru/jn.html"),
-  js: require("../../assets/ru/js.html"),
-  jud: require("../../assets/ru/jud.html"),
-  jr: require("../../assets/ru/jr.html"),
-  lm: require("../../assets/ru/lm.html"),
-  lk: require("../../assets/ru/lk.html"),
-  lv: require("../../assets/ru/lv.html"),
-  ml: require("../../assets/ru/ml.html"),
-  mi: require("../../assets/ru/mi.html"),
-  mk: require("../../assets/ru/mk.html"),
-  mt: require("../../assets/ru/mt.html"),
-  na: require("../../assets/ru/na.html"),
-  ne: require("../../assets/ru/ne.html"),
-  nm: require("../../assets/ru/nm.html"),
-  ob: require("../../assets/ru/ob.html"),
-  ph: require("../../assets/ru/ph.html"),
-  phm: require("../../assets/ru/phm.html"),
-  prv: require("../../assets/ru/prv.html"),
-  ps: require("../../assets/ru/ps.html"),
-  re: require("../../assets/ru/re.html"),
-  rm: require("../../assets/ru/rm.html"),
-  rt: require("../../assets/ru/rt.html"),
-  so: require("../../assets/ru/so.html"),
-  tt: require("../../assets/ru/tt.html"),
-  zc: require("../../assets/ru/zc.html"),
-  zp: require("../../assets/ru/zp.html"),
-};
+import React, { useEffect, useState } from "react";
+import { SafeAreaView, ScrollView, StyleSheet, Text } from "react-native";
 
 const Read = () => {
+  const [content, setContent] = useState("");
+
+  useEffect(() => {
+    fetch("https://cdn.jsdelivr.net/gh/iiqstudio/bible-test/1ch.json")
+      .then((res) => res.json())
+      .then((data) => {
+        let html = `${data.book}\n\n`;
+        data.chapters.forEach((ch) => {
+          html += `${ch.title}\n`;
+          ch.verses.forEach((v) => {
+            html += `${v.verse_number}. ${v.text}\n`;
+          });
+          html += "\n";
+        });
+        setContent(html);
+      });
+  }, []);
+
   return (
-    <WebView
-      style={styles.container}
-      source={{ html: "<h1><center>Hello world</center></h1>" }}
-    />
+    <SafeAreaView style={styles.container}>
+      <ScrollView>
+        <Text style={styles.text}>{content}</Text>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: "center", alignItems: "center" },
-  text: { fontSize: 24, color: "#fff" },
+  container: { flex: 1, backgroundColor: "#fff" },
+  text: { fontSize: 16, lineHeight: 24 },
 });
 
 export default Read;
