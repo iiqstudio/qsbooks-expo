@@ -1,11 +1,13 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
+import { WebView } from "react-native-webview";
 
 const Read = () => {
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Экран для Чтения</Text>
-    </View>
+    <WebView
+      style={styles.container}
+      source={{ html: "<h1><center>Hello world</center></h1>" }}
+    />
   );
 };
 
