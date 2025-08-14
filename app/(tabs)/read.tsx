@@ -2,7 +2,7 @@ import CustomHeader from "@/components/CustomHeader";
 import SelectionActionsModal from "@/components/ui/SelectionActionsModal";
 import StyleSettingsModal from "@/components/ui/StyleSettingsModal";
 import * as Clipboard from "expo-clipboard";
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { SafeAreaView, Share, StyleSheet } from "react-native";
 import { WebView } from "react-native-webview";
@@ -65,15 +65,17 @@ const Read = () => {
     text: "",
     position: { top: 0, left: 0 },
   });
+  const router = useRouter();
   const webViewRef = useRef(null);
   const [isModalVisible, setModalVisible] = useState(false);
   const [bookData, setBookData] = useState<BookData | null>(null);
   const [currentChapter, setCurrentChapter] = useState(1);
   const [selectedText, setSelectedText] = useState("");
   const [isSelectionModalVisible, setSelectionModalVisible] = useState(false);
-  const [isStyleModalVisible, setStyleModalVisible] = useState(false);
-  const openStyleModal = () => setStyleModalVisible(true);
-  const closeStyleModal = () => setStyleModalVisible(false);
+
+  const navigateToBooksScreen = () => {
+    router.push("/books");
+  };
 
   const openSelectionModal = () => setSelectionModalVisible(true);
   const closeSelectionModal = () => {
@@ -188,10 +190,9 @@ const Read = () => {
 
       switch (data.type) {
         case "selection":
-          // 3. НОВАЯ ЛОГИКА ПРИ ВЫДЕЛЕНИИ ТЕКСТА
           if (data.text && data.text.trim() !== "") {
-            setSelectedText(data.text); // Сохраняем текст
-            openSelectionModal(); // Открываем модалку
+            setSelectedText(data.text);
+            openSelectionModal();
           } else {
             closeSelectionModal();
           }
@@ -271,6 +272,8 @@ const Read = () => {
               chapter={currentChapter}
               onStylePress={openModal}
               theme={activeTheme}
+              onBookPress={navigateToBooksScreen}
+              onChapterPress={navigateToBooksScreen}
             />
           ),
         }}
