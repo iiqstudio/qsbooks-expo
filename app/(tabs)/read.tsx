@@ -1,16 +1,10 @@
 import CustomHeader from "@/components/CustomHeader";
+import SelectionActionsModal from "@/components/ui/SelectionActionsModal";
 import StyleSettingsModal from "@/components/ui/StyleSettingsModal";
 import * as Clipboard from "expo-clipboard";
 import { Stack } from "expo-router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import {
-  SafeAreaView,
-  Share,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { SafeAreaView, Share, StyleSheet } from "react-native";
 import { WebView } from "react-native-webview";
 
 const TOOLTIP_WIDTH = 250;
@@ -75,87 +69,69 @@ const Read = () => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [bookData, setBookData] = useState<BookData | null>(null);
   const [currentChapter, setCurrentChapter] = useState(1);
+  const [selectedText, setSelectedText] = useState("");
+  const [isSelectionModalVisible, setSelectionModalVisible] = useState(false);
+  const [isStyleModalVisible, setStyleModalVisible] = useState(false);
+  const openStyleModal = () => setStyleModalVisible(true);
+  const closeStyleModal = () => setStyleModalVisible(false);
+
+  const openSelectionModal = () => setSelectionModalVisible(true);
+  const closeSelectionModal = () => {
+    setSelectionModalVisible(false);
+    setSelectedText("");
+  };
 
   const injectedJavaScript = `
       (function() {
         function sendSelectionData() {
           const selection = window.getSelection();
           const selectedText = selection.toString();
-
           if (selectedText.trim().length > 0) {
             const range = selection.getRangeAt(0);
             const rect = range.getBoundingClientRect(); 
-
             window.ReactNativeWebView.postMessage(JSON.stringify({
               type: 'selection',
               text: selectedText,
-              rect: {
-                  top: rect.top, 
-                  left: rect.left,
-                  width: rect.width,
-                  height: rect.height
-              }
+              rect: { top: rect.top, left: rect.left, width: rect.width, height: rect.height }
             }));
-          } else {
-            window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'dismiss' }));
           }
         }
-        
-        document.addEventListener('selectionchange', sendSelectionData);
-        document.addEventListener('mouseup', () => {
-            setTimeout(() => {
-                if (window.getSelection().toString().trim().length === 0) {
-                     window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'dismiss' }));
+
+        document.removeEventListener('selectionchange', sendSelectionData);
+
+        const handleInteractionEnd = () => {
+          setTimeout(() => {
+            const selectionText = window.getSelection().toString().trim();
+            if (selectionText.length > 0) {
+              sendSelectionData();
+            } else {
+              window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'dismiss' }));
+            }
+          }, 100);
+        };
+        document.addEventListener('mouseup', handleInteractionEnd);
+        document.addEventListener('touchend', handleInteractionEnd);
+
+        try {
+          const headings = document.querySelectorAll('h2[id^="chapter-"]');
+          if (headings.length > 0) {
+            const observer = new IntersectionObserver((entries) => {
+              entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                  const chapterNumber = parseInt(entry.target.id.split('-')[1], 10);
+                  if (chapterNumber) {
+                    window.ReactNativeWebView.postMessage(JSON.stringify({
+                      type: 'chapter-change',
+                      chapter: chapterNumber
+                    }));
+                  }
                 }
-            }, 50);
-        });
-          try {
-          window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'debug', message: 'Observer script started.' }));
-
-          const headings = document.querySelectorAll('h2');
-          window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'debug', message: 'Found ' + headings.length + ' h2 elements.' }));
-
-          if (headings.length === 0) {
-            window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'debug', message: 'ERROR: No h2 elements found to observe.' }));
-            return;
+              });
+            }, { threshold: 0.1 });
+            headings.forEach(heading => observer.observe(heading));
           }
+        } catch (e) { /* ... */ }
 
-          const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.1 
-          };
-
-          const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-              window.ReactNativeWebView.postMessage(JSON.stringify({ 
-                type: 'debug', 
-                message: 'Observer fired for ' + entry.target.id,
-                isIntersecting: entry.isIntersecting 
-              }));
-
-              if (entry.isIntersecting) {
-                const chapterId = entry.target.id;
-                const chapterNumber = parseInt(chapterId.split('-')[1], 10);
-                
-                if (chapterNumber) {
-                  window.ReactNativeWebView.postMessage(JSON.stringify({
-                    type: 'chapter-change',
-                    chapter: chapterNumber
-                  }));
-                } else {
-                  window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'debug', message: 'ERROR: Could not parse chapter number from id: ' + chapterId }));
-                }
-              }
-            });
-          }, observerOptions);
-
-          headings.forEach(heading => {
-            observer.observe(heading);
-          });
-        } catch (e) {
-          window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'debug', message: 'ERROR in injected script: ' + e.message }));
-        }
         true;
       })();
     `;
@@ -212,26 +188,13 @@ const Read = () => {
 
       switch (data.type) {
         case "selection":
-          if (!data.text || data.text.trim() === "") {
-            if (selection.visible) {
-              setSelection((prev) => ({ ...prev, visible: false }));
-            }
-            return;
+          // 3. НОВАЯ ЛОГИКА ПРИ ВЫДЕЛЕНИИ ТЕКСТА
+          if (data.text && data.text.trim() !== "") {
+            setSelectedText(data.text); // Сохраняем текст
+            openSelectionModal(); // Открываем модалку
+          } else {
+            closeSelectionModal();
           }
-
-          const { top, left, width, height } = data.rect;
-
-          // Рассчитываем позицию ПОД текстом
-          const newPosition = {
-            top: top + height,
-            left: Math.max(left + width / 2 - TOOLTIP_WIDTH / 2, 0),
-          };
-
-          setSelection({
-            visible: true,
-            text: data.text,
-            position: newPosition,
-          });
           break;
 
         case "dismiss":
@@ -251,25 +214,24 @@ const Read = () => {
   };
 
   const handleCopy = async () => {
-    if (selection.text) {
-      await Clipboard.setStringAsync(selection.text);
+    if (selectedText) {
+      await Clipboard.setStringAsync(selectedText);
     }
-    setSelection((prev) => ({ ...prev, visible: false }));
+    closeSelectionModal();
   };
 
   const handleShare = async () => {
     try {
-      await Share.share({
-        message: selection.text,
-      });
-    } catch (error) {
-      console.error("Ошибка Share API:", (error as Error).message);
-    }
-    setSelection((prev) => ({ ...prev, visible: false }));
+      if (selectedText) {
+        await Share.share({ message: selectedText });
+      }
+    } catch (error) {}
+    closeSelectionModal();
   };
 
   const handleDiscuss = () => {
-    setSelection((prev) => ({ ...prev, visible: false }));
+    console.log("Обсудить с ИИ:", selectedText);
+    closeSelectionModal();
   };
 
   const htmlContent = `
@@ -321,37 +283,7 @@ const Read = () => {
         injectedJavaScript={injectedJavaScript}
         style={{ backgroundColor: activeTheme.bgColor }}
       />
-      {selection.visible && (
-        <View
-          style={[
-            styles.tooltipContainer,
-            { top: selection.position.top, left: selection.position.left },
-          ]}
-        >
-          <View style={styles.arrow} />
-          <View style={styles.tooltip}>
-            <TouchableOpacity onPress={handleCopy} style={styles.tooltipButton}>
-              <Text style={styles.tooltipText}>Copy</Text>
-            </TouchableOpacity>
-            <View style={styles.separator} />
 
-            <TouchableOpacity
-              onPress={handleShare}
-              style={styles.tooltipButton}
-            >
-              <Text style={styles.tooltipText}>Share</Text>
-            </TouchableOpacity>
-            <View style={styles.separator} />
-
-            <TouchableOpacity
-              onPress={handleDiscuss}
-              style={styles.tooltipButton}
-            >
-              <Text style={styles.tooltipText}>Chat</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      )}
       <StyleSettingsModal
         isVisible={isModalVisible}
         onClose={closeModal}
@@ -359,6 +291,13 @@ const Read = () => {
         onThemeChange={handleThemeChange}
         onIncreaseFontSize={increaseFontSize}
         onDecreaseFontSize={decreaseFontSize}
+      />
+      <SelectionActionsModal
+        isVisible={isSelectionModalVisible}
+        onClose={closeSelectionModal}
+        onCopy={handleCopy}
+        onShare={handleShare}
+        onDiscuss={handleDiscuss}
       />
     </SafeAreaView>
   );
