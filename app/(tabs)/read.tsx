@@ -74,6 +74,7 @@ const Read = () => {
   const webViewRef = useRef(null);
   const [isModalVisible, setModalVisible] = useState(false);
   const [bookData, setBookData] = useState<BookData | null>(null);
+  const [currentChapter, setCurrentChapter] = useState(1);
 
   const injectedJavaScript = `
       (function() {
@@ -83,14 +84,12 @@ const Read = () => {
 
           if (selectedText.trim().length > 0) {
             const range = selection.getRangeAt(0);
-            // getBoundingClientRect() дает позицию относительно видимой части экрана.
             const rect = range.getBoundingClientRect(); 
 
             window.ReactNativeWebView.postMessage(JSON.stringify({
               type: 'selection',
               text: selectedText,
               rect: {
-                  // Отправляем "чистые" координаты, не добавляя прокрутку
                   top: rect.top, 
                   left: rect.left,
                   width: rect.width,
@@ -98,7 +97,6 @@ const Read = () => {
               }
             }));
           } else {
-            // Если выделение снято, отправляем команду скрыть меню
             window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'dismiss' }));
           }
         }
@@ -111,6 +109,53 @@ const Read = () => {
                 }
             }, 50);
         });
+          try {
+          window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'debug', message: 'Observer script started.' }));
+
+          const headings = document.querySelectorAll('h2');
+          window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'debug', message: 'Found ' + headings.length + ' h2 elements.' }));
+
+          if (headings.length === 0) {
+            window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'debug', message: 'ERROR: No h2 elements found to observe.' }));
+            return;
+          }
+
+          const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1 
+          };
+
+          const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              window.ReactNativeWebView.postMessage(JSON.stringify({ 
+                type: 'debug', 
+                message: 'Observer fired for ' + entry.target.id,
+                isIntersecting: entry.isIntersecting 
+              }));
+
+              if (entry.isIntersecting) {
+                const chapterId = entry.target.id;
+                const chapterNumber = parseInt(chapterId.split('-')[1], 10);
+                
+                if (chapterNumber) {
+                  window.ReactNativeWebView.postMessage(JSON.stringify({
+                    type: 'chapter-change',
+                    chapter: chapterNumber
+                  }));
+                } else {
+                  window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'debug', message: 'ERROR: Could not parse chapter number from id: ' + chapterId }));
+                }
+              }
+            });
+          }, observerOptions);
+
+          headings.forEach(heading => {
+            observer.observe(heading);
+          });
+        } catch (e) {
+          window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'debug', message: 'ERROR in injected script: ' + e.message }));
+        }
         true;
       })();
     `;
@@ -152,7 +197,7 @@ const Read = () => {
         setBookData(data);
         let html = `<h1>${data.book}</h1>`;
         data.chapters.forEach((ch) => {
-          html += `<h2>${ch.title}</h2>`;
+          html += `<h2 id="chapter-${ch.chapter_number}">${ch.title}</h2>`;
           ch.verses.forEach((v) => {
             html += `<p><span>${v.verse_number}. ${v.text}</span></p>`;
           });
@@ -194,6 +239,11 @@ const Read = () => {
             setSelection((prev) => ({ ...prev, visible: false }));
           }
           break;
+        case "chapter-change":
+          if (data.chapter !== currentChapter) {
+            setCurrentChapter(data.chapter);
+          }
+          break;
       }
     } catch (error) {
       console.error("Failed to parse message from WebView", error);
@@ -210,7 +260,7 @@ const Read = () => {
   const handleShare = async () => {
     try {
       await Share.share({
-        message: selection.text, // Делимся выделенным текстом
+        message: selection.text,
       });
     } catch (error) {
       console.error("Ошибка Share API:", (error as Error).message);
@@ -219,19 +269,14 @@ const Read = () => {
   };
 
   const handleDiscuss = () => {
-    console.log("Обсудить с ИИ:", selection.text);
     setSelection((prev) => ({ ...prev, visible: false }));
   };
-
-  const bgColor = "#fff";
-  const textColor = "#000";
 
   const htmlContent = `
     <html>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
         <style>
-          /* Отключаем стандартное меню iOS/Android */
           * {
             -webkit-touch-callout: none !important;
             -webkit-user-select: text !important;
@@ -261,7 +306,7 @@ const Read = () => {
           header: () => (
             <CustomHeader
               bookTitle={bookData ? bookData.book : "Загрузка..."}
-              chapter={activeTheme.name === "dark" ? "13" : "12"}
+              chapter={currentChapter}
               onStylePress={openModal}
               theme={activeTheme}
             />
@@ -360,7 +405,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   tooltipText: {
-    color: "#000", // Черный текст для светлого меню
+    color: "#000",
     fontWeight: "500",
     fontSize: 16,
   },

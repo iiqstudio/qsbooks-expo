@@ -72,7 +72,7 @@ const CustomHeader = ({
             onPress={onChapterPress}
             style={styles.chapterButton}
           >
-            <Text style={styles.chapterText}>1{chapter}</Text>
+            <Text style={styles.chapterText}>{chapter}</Text>
           </TouchableOpacity>
         </View>
 
