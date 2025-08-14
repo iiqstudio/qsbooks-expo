@@ -47,6 +47,21 @@ const themes = {
   },
 };
 
+interface Verse {
+  verse_number: number;
+  text: string;
+}
+interface Chapter {
+  chapter_number: number;
+  title: string;
+  verses: Verse[];
+}
+
+interface BookData {
+  book: string;
+  chapters: Chapter[];
+}
+
 const Read = () => {
   const [content, setContent] = useState("");
   const [fontSize, setFontSize] = useState(18);
@@ -58,6 +73,7 @@ const Read = () => {
   });
   const webViewRef = useRef(null);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [bookData, setBookData] = useState<BookData | null>(null);
 
   const injectedJavaScript = `
       (function() {
@@ -132,7 +148,8 @@ const Read = () => {
   useEffect(() => {
     fetch("https://cdn.jsdelivr.net/gh/iiqstudio/bible-test/1ch.json")
       .then((res) => res.json())
-      .then((data) => {
+      .then((data: BookData) => {
+        setBookData(data);
         let html = `<h1>${data.book}</h1>`;
         data.chapters.forEach((ch) => {
           html += `<h2>${ch.title}</h2>`;
@@ -243,7 +260,7 @@ const Read = () => {
         options={{
           header: () => (
             <CustomHeader
-              bookTitle="Вторая книга Парал..."
+              bookTitle={bookData ? bookData.book : "Загрузка..."}
               chapter={activeTheme.name === "dark" ? "13" : "12"}
               onStylePress={openModal}
               theme={activeTheme}

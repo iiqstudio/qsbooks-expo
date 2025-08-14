@@ -119,7 +119,7 @@ const createStyles = (theme: any) =>
       flex: 1,
       flexDirection: "row",
       backgroundColor: theme.headerButtonBg,
-      borderRadius: 12,
+      borderRadius: 50,
       overflow: "hidden",
       marginHorizontal: 10,
       height: 44,
@@ -136,7 +136,8 @@ const createStyles = (theme: any) =>
       fontWeight: "600",
     },
     separator: {
-      width: 2,
+      width: 3,
+      backgroundColor: theme.headerBg,
     },
     chapterButton: {
       paddingHorizontal: 16,
