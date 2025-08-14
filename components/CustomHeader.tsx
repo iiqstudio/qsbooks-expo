@@ -39,7 +39,7 @@ const CustomHeader = ({
         <View style={styles.centerContainer}>
           <TouchableOpacity onPress={onBookPress} style={styles.titleButton}>
             <Text style={styles.titleText} numberOfLines={1}>
-              {bookTitle}
+              {bookTitle} Mock text test
             </Text>
           </TouchableOpacity>
           <View style={styles.separator} />
@@ -47,11 +47,10 @@ const CustomHeader = ({
             onPress={onChapterPress}
             style={styles.chapterButton}
           >
-            <Text style={styles.chapterText}>{chapter}</Text>
+            <Text style={styles.chapterText}>1{chapter}</Text>
           </TouchableOpacity>
         </View>
 
-        {/* Контейнер для кнопки "Аа" */}
         <View style={styles.sideContainer}>
           <TouchableOpacity
             onPress={onStylePress}
