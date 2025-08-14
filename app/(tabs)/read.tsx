@@ -1,4 +1,7 @@
+import CustomHeader from "@/components/CustomHeader";
+import StyleSettingsModal from "@/components/ui/StyleSettingsModal";
 import * as Clipboard from "expo-clipboard";
+import { Stack } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import {
   SafeAreaView,
@@ -16,12 +19,21 @@ const ARROW_HEIGHT = 10;
 
 const Read = () => {
   const [content, setContent] = useState("");
+  const [activeTheme, setActiveTheme] = useState("light");
   const [selection, setSelection] = useState({
     visible: false,
     text: "",
     position: { top: 0, left: 0 },
   });
   const webViewRef = useRef(null);
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const openModal = () => setModalVisible(true);
+  const closeModal = () => setModalVisible(false);
+
+  const handleThemeChange = (theme) => {
+    setActiveTheme(theme);
+  };
 
   useEffect(() => {
     fetch("https://cdn.jsdelivr.net/gh/iiqstudio/bible-test/1ch.json")
@@ -170,6 +182,17 @@ const Read = () => {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: bgColor }]}>
+      <Stack.Screen
+        options={{
+          header: () => (
+            <CustomHeader
+              bookTitle="Вторая книга Парал..."
+              chapter="2"
+              onStylePress={openModal}
+            />
+          ),
+        }}
+      />
       <WebView
         ref={webViewRef}
         originWhitelist={["*"]}
@@ -209,6 +232,12 @@ const Read = () => {
           </View>
         </View>
       )}
+      <StyleSettingsModal
+        isVisible={isModalVisible}
+        onClose={closeModal}
+        currentTheme={activeTheme}
+        onThemeChange={handleThemeChange}
+      />
     </SafeAreaView>
   );
 };
