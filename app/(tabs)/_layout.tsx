@@ -2,6 +2,7 @@ import { Tabs } from "expo-router";
 import React from "react";
 import { Platform } from "react-native";
 
+import CustomHeader from "@/components/CustomHeader";
 import { HapticTab } from "@/components/HapticTab";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import TabBarBackground from "@/components/ui/TabBarBackground";
@@ -15,7 +16,7 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-        headerShown: false,
+        header: (props) => <CustomHeader {...props} />,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
@@ -31,6 +32,7 @@ export default function TabLayout() {
         name="index"
         options={{
           title: "Home",
+          headerShown: false,
           tabBarIcon: ({ color }) => (
             <IconSymbol size={28} name="house.fill" color={color} />
           ),
@@ -40,6 +42,7 @@ export default function TabLayout() {
         name="explore"
         options={{
           title: "Chat",
+          headerShown: false,
           tabBarIcon: ({ color }) => (
             <IconSymbol size={28} name="paperplane.fill" color={color} />
           ),
@@ -50,6 +53,7 @@ export default function TabLayout() {
         options={{
           title: "Test Home",
           href: null,
+          headerShown: false,
         }}
       />
       <Tabs.Screen
