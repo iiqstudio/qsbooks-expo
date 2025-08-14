@@ -2,7 +2,7 @@ import CustomHeader from "@/components/CustomHeader";
 import StyleSettingsModal from "@/components/ui/StyleSettingsModal";
 import * as Clipboard from "expo-clipboard";
 import { Stack } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   SafeAreaView,
   Share,
@@ -17,9 +17,40 @@ const TOOLTIP_WIDTH = 250;
 const TOOLTIP_HEIGHT = 50;
 const ARROW_HEIGHT = 10;
 
+const themes = {
+  light: {
+    name: "light",
+    bgColor: "#FFFFFF",
+    textColor: "#000000",
+    headerBg: "#FFFFFF",
+    headerButtonBg: "#EFEFF4",
+    headerButtonColor: "#007AFF",
+    separatorColor: "#D1D1D6",
+  },
+  sepia: {
+    name: "sepia",
+    bgColor: "#F5EFE6",
+    textColor: "#5B4636",
+    headerBg: "#F5EFE6",
+    headerButtonBg: "#E4DACE",
+    headerButtonColor: "#5B4636",
+    separatorColor: "#D1C4B3",
+  },
+  dark: {
+    name: "dark",
+    bgColor: "#121212",
+    textColor: "#FFFFFF",
+    headerBg: "#121212",
+    headerButtonBg: "#2C2C2E",
+    headerButtonColor: "#FFFFFF",
+    separatorColor: "#424244",
+  },
+};
+
 const Read = () => {
   const [content, setContent] = useState("");
-  const [activeTheme, setActiveTheme] = useState("light");
+  const [fontSize, setFontSize] = useState(18);
+  const [activeTheme, setActiveTheme] = useState(themes.light);
   const [selection, setSelection] = useState({
     visible: false,
     text: "",
@@ -28,12 +59,75 @@ const Read = () => {
   const webViewRef = useRef(null);
   const [isModalVisible, setModalVisible] = useState(false);
 
+  const injectedJavaScript = `
+      (function() {
+        function sendSelectionData() {
+          const selection = window.getSelection();
+          const selectedText = selection.toString();
+
+          if (selectedText.trim().length > 0) {
+            const range = selection.getRangeAt(0);
+            // getBoundingClientRect() дает позицию относительно видимой части экрана.
+            const rect = range.getBoundingClientRect(); 
+
+            window.ReactNativeWebView.postMessage(JSON.stringify({
+              type: 'selection',
+              text: selectedText,
+              rect: {
+                  // Отправляем "чистые" координаты, не добавляя прокрутку
+                  top: rect.top, 
+                  left: rect.left,
+                  width: rect.width,
+                  height: rect.height
+              }
+            }));
+          } else {
+            // Если выделение снято, отправляем команду скрыть меню
+            window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'dismiss' }));
+          }
+        }
+        
+        document.addEventListener('selectionchange', sendSelectionData);
+        document.addEventListener('mouseup', () => {
+            setTimeout(() => {
+                if (window.getSelection().toString().trim().length === 0) {
+                     window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'dismiss' }));
+                }
+            }, 50);
+        });
+        true;
+      })();
+    `;
+
   const openModal = () => setModalVisible(true);
   const closeModal = () => setModalVisible(false);
 
-  const handleThemeChange = (theme) => {
-    setActiveTheme(theme);
-  };
+  const handleThemeChange = useCallback(
+    (themeName: "light" | "sepia" | "dark") => {
+      setActiveTheme(themes[themeName]);
+    },
+    []
+  );
+
+  const increaseFontSize = useCallback(() => {
+    setFontSize((currentSize) => Math.min(32, currentSize + 2));
+  }, []);
+
+  const decreaseFontSize = useCallback(() => {
+    setFontSize((currentSize) => Math.max(14, currentSize - 2));
+  }, []);
+
+  useEffect(() => {
+    if (webViewRef.current) {
+      const script = `
+        document.body.style.backgroundColor = '${activeTheme.bgColor}';
+        document.body.style.color = '${activeTheme.textColor}';
+        document.body.style.fontSize = '${fontSize}px';
+        true; // Обязательно для iOS
+      `;
+      webViewRef.current.injectJavaScript(script);
+    }
+  }, [activeTheme, fontSize]);
 
   useEffect(() => {
     fetch("https://cdn.jsdelivr.net/gh/iiqstudio/bible-test/1ch.json")
@@ -112,46 +206,6 @@ const Read = () => {
     setSelection((prev) => ({ ...prev, visible: false }));
   };
 
-  const injectedJavaScript = `
-      (function() {
-        function sendSelectionData() {
-          const selection = window.getSelection();
-          const selectedText = selection.toString();
-
-          if (selectedText.trim().length > 0) {
-            const range = selection.getRangeAt(0);
-            // getBoundingClientRect() дает позицию относительно видимой части экрана.
-            const rect = range.getBoundingClientRect(); 
-
-            window.ReactNativeWebView.postMessage(JSON.stringify({
-              type: 'selection',
-              text: selectedText,
-              rect: {
-                  // Отправляем "чистые" координаты, не добавляя прокрутку
-                  top: rect.top, 
-                  left: rect.left,
-                  width: rect.width,
-                  height: rect.height
-              }
-            }));
-          } else {
-            // Если выделение снято, отправляем команду скрыть меню
-            window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'dismiss' }));
-          }
-        }
-        
-        document.addEventListener('selectionchange', sendSelectionData);
-        document.addEventListener('mouseup', () => {
-            setTimeout(() => {
-                if (window.getSelection().toString().trim().length === 0) {
-                     window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'dismiss' }));
-                }
-            }, 50);
-        });
-        true;
-      })();
-    `;
-
   const bgColor = "#fff";
   const textColor = "#000";
 
@@ -166,13 +220,14 @@ const Read = () => {
             -webkit-user-select: text !important;
             user-select: text !important;
           }
-          body { 
-            background-color: ${bgColor}; 
-            color: ${textColor}; 
+         body { 
+            background-color: ${activeTheme.bgColor}; 
+            color: ${activeTheme.textColor}; 
             font-family: -apple-system, sans-serif;
-            font-size: 18px; 
+            font-size: ${fontSize}px; 
             line-height: 1.6; 
             padding: 16px; 
+            transition: background-color 0.3s, color 0.3s;
           }
         </style>
       </head>
@@ -181,14 +236,17 @@ const Read = () => {
   `;
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: bgColor }]}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: activeTheme.headerBg }]}
+    >
       <Stack.Screen
         options={{
           header: () => (
             <CustomHeader
               bookTitle="Вторая книга Парал..."
-              chapter="2"
+              chapter={activeTheme.name === "dark" ? "13" : "12"}
               onStylePress={openModal}
+              theme={activeTheme}
             />
           ),
         }}
@@ -199,7 +257,7 @@ const Read = () => {
         source={{ html: htmlContent }}
         onMessage={onMessage}
         injectedJavaScript={injectedJavaScript}
-        style={{ backgroundColor: bgColor }}
+        style={{ backgroundColor: activeTheme.bgColor }}
       />
       {selection.visible && (
         <View
@@ -235,8 +293,10 @@ const Read = () => {
       <StyleSettingsModal
         isVisible={isModalVisible}
         onClose={closeModal}
-        currentTheme={activeTheme}
+        currentTheme={activeTheme.name}
         onThemeChange={handleThemeChange}
+        onIncreaseFontSize={increaseFontSize}
+        onDecreaseFontSize={decreaseFontSize}
       />
     </SafeAreaView>
   );

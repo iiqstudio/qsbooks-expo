@@ -28,6 +28,8 @@ const StyleSettingsModal = ({
   onClose,
   currentTheme,
   onThemeChange,
+  onIncreaseFontSize,
+  onDecreaseFontSize,
 }: any) => {
   return (
     <Modal
@@ -43,10 +45,17 @@ const StyleSettingsModal = ({
 
             {/* Настройки размера шрифта */}
             <View style={styles.settingRow}>
-              <TouchableOpacity style={styles.fontSizeButton}>
+              {/* 2. Подключаем функции к кнопкам */}
+              <TouchableOpacity
+                style={styles.fontSizeButton}
+                onPress={onDecreaseFontSize}
+              >
                 <Text style={styles.fontSizeTextSmall}>Аа</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.fontSizeButton}>
+              <TouchableOpacity
+                style={styles.fontSizeButton}
+                onPress={onIncreaseFontSize}
+              >
                 <Text style={styles.fontSizeTextLarge}>Аа</Text>
               </TouchableOpacity>
             </View>

@@ -4,15 +4,40 @@ import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+interface ITheme {
+  headerBg: string;
+  headerButtonBg: string;
+  headerButtonColor: string;
+}
+
+interface IProps {
+  bookTitle: string;
+  chapter: string | number;
+  onBookPress?: () => void;
+  onChapterPress?: () => void;
+  onStylePress?: () => void;
+  theme?: ITheme;
+  showBackButton?: boolean;
+}
+
+const defaultTheme = {
+  headerBg: "#FFFFFF",
+  headerButtonBg: "#EFEFF4",
+  headerButtonColor: "#007AFF",
+};
+
 const CustomHeader = ({
   bookTitle,
   chapter,
   onBookPress,
   onChapterPress,
   onStylePress,
+  theme = defaultTheme,
   showBackButton = true,
-}) => {
+}: IProps) => {
   const navigation = useNavigation();
+
+  const styles = createStyles(theme);
 
   const handleBackPress = () => {
     if (navigation.canGoBack()) {
@@ -64,68 +89,68 @@ const CustomHeader = ({
   );
 };
 
-const styles = StyleSheet.create({
-  safeArea: {
-    backgroundColor: "#fff",
-  },
-  container: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 10,
-    height: 60,
-  },
-  sideContainer: {
-    width: 50,
-  },
-  roundButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: "#EFEFF4",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  alignRight: {
-    alignSelf: "flex-end",
-  },
-  centerContainer: {
-    flex: 1,
-    flexDirection: "row",
-    backgroundColor: "#EFEFF4",
-    borderRadius: 50,
-    overflow: "hidden",
-    marginHorizontal: 10,
-    height: 44,
-  },
-  titleButton: {
-    flex: 1,
-    paddingHorizontal: 16,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  titleText: {
-    color: "#007AFF",
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  separator: {
-    width: 4,
-    backgroundColor: "#fff",
-  },
-  chapterButton: {
-    paddingHorizontal: 16,
-    justifyContent: "center",
-  },
-  chapterText: {
-    color: "#007AFF",
-    fontSize: 16,
-  },
-  styleButtonText: {
-    fontSize: 20,
-    color: "#007AFF",
-    fontWeight: "500",
-  },
-});
+const createStyles = (theme: any) =>
+  StyleSheet.create({
+    safeArea: {
+      backgroundColor: theme.headerBg,
+    },
+    container: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      paddingHorizontal: 10,
+      height: 60,
+    },
+    sideContainer: {
+      width: 50,
+    },
+    roundButton: {
+      width: 44,
+      height: 44,
+      borderRadius: 22,
+      backgroundColor: theme.headerButtonBg,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    alignRight: {
+      alignSelf: "flex-end",
+    },
+    centerContainer: {
+      flex: 1,
+      flexDirection: "row",
+      backgroundColor: theme.headerButtonBg,
+      borderRadius: 12,
+      overflow: "hidden",
+      marginHorizontal: 10,
+      height: 44,
+    },
+    titleButton: {
+      flex: 1,
+      paddingHorizontal: 16,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    titleText: {
+      color: theme.headerButtonColor,
+      fontSize: 16,
+      fontWeight: "600",
+    },
+    separator: {
+      width: 2,
+    },
+    chapterButton: {
+      paddingHorizontal: 16,
+      justifyContent: "center",
+    },
+    chapterText: {
+      color: theme.headerButtonColor,
+      fontSize: 16,
+    },
+    styleButtonText: {
+      fontSize: 20,
+      color: theme.headerButtonColor,
+      fontWeight: "500",
+    },
+  });
 
 export default CustomHeader;
