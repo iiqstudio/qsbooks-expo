@@ -1,4 +1,4 @@
-import { AntDesign, Feather } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import { router, Stack, useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -11,6 +11,7 @@ import {
   View,
 } from "react-native";
 import Collapsible from "react-native-collapsible";
+import PurchaseSvg from "../assets/images/svg/purchase.svg";
 
 const allBooksOfTheBible = [
   // 📖 Ветхий Завет
@@ -138,7 +139,7 @@ function BooksScreen(props: any) {
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Books</Text>
         <TouchableOpacity>
-          <Feather name="star" size={22} color="#007AFF" />
+          <PurchaseSvg />
         </TouchableOpacity>
       </View>
 

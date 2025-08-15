@@ -8,6 +8,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
+import ShareImg from "../../assets/images/svg/share_black.svg";
 
 interface IProps {
   isVisible: boolean;
@@ -35,17 +36,15 @@ const SelectionActionsModal: React.FC<IProps> = ({
         <View style={styles.overlay}>
           <TouchableWithoutFeedback>
             <View style={styles.modalContainer}>
-              {/* "Ручка" для красоты */}
               <View style={styles.handle} />
-
-              {/* Кнопки действий */}
               <TouchableOpacity style={styles.actionButton} onPress={onCopy}>
                 <Ionicons name="copy-outline" size={22} color="#000" />
                 <Text style={styles.actionText}>Copy</Text>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.actionButton} onPress={onShare}>
-                <Ionicons name="share-outline" size={22} color="#000" />
+                {/* <Ionicons name="share-outline" size={22} color="#000" /> */}
+                <ShareImg />
                 <Text style={styles.actionText}>Share</Text>
               </TouchableOpacity>
 
@@ -77,7 +76,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     padding: 20,
     paddingTop: 10,
-    gap: 10, // Добавляем отступ между кнопками
+    gap: 10,
   },
   handle: {
     width: 40,
