@@ -1,5 +1,4 @@
-import { AntDesign } from "@expo/vector-icons";
-import { router, Stack, useRouter } from "expo-router";
+import { router, Stack } from "expo-router";
 import React, { useState } from "react";
 import {
   SafeAreaView,
@@ -11,7 +10,10 @@ import {
   View,
 } from "react-native";
 import Collapsible from "react-native-collapsible";
+import BackSvg from "../assets/images/svg/back_dark_blue.svg";
+import DownSvg from "../assets/images/svg/down_black.svg";
 import PurchaseSvg from "../assets/images/svg/purchase.svg";
+import UpSvg from "../assets/images/svg/up_black.svg";
 
 const allBooksOfTheBible = [
   // 📖 Ветхий Завет
@@ -86,8 +88,6 @@ const allBooksOfTheBible = [
 ];
 
 const BookItem = ({ book, isExpanded, onPress }: any) => {
-  const router = useRouter();
-
   const chapters = Array.from({ length: book.chapters }, (_, i) => i + 1);
 
   return (
@@ -95,11 +95,7 @@ const BookItem = ({ book, isExpanded, onPress }: any) => {
       <Stack.Screen options={{ headerShown: false }} />
       <TouchableOpacity onPress={onPress} style={styles.bookHeader}>
         <Text style={styles.bookTitle}>{book.name}</Text>
-        {isExpanded ? (
-          <AntDesign name="up" size={20} color="#8E8E93" />
-        ) : (
-          <AntDesign name="down" size={20} color="#8E8E93" />
-        )}
+        {isExpanded ? <UpSvg /> : <DownSvg />}
       </TouchableOpacity>
 
       <Collapsible collapsed={!isExpanded}>
@@ -134,8 +130,11 @@ function BooksScreen(props: any) {
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}>
-          <AntDesign name="left" size={24} color="#007AFF" />
+        <TouchableOpacity
+          onPress={() => router.back()}
+          style={styles.headerButton}
+        >
+          <BackSvg />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Books</Text>
         <TouchableOpacity>
@@ -173,7 +172,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 17,
     fontWeight: "600",
-    color: "#000000",
+    color: "#007AFF",
   },
   bookContainer: {
     paddingHorizontal: 20,
@@ -186,7 +185,7 @@ const styles = StyleSheet.create({
   },
   bookTitle: {
     fontSize: 17,
-    color: "#000000",
+    color: "#0A0A0A",
   },
   chaptersGrid: {
     flexDirection: "row",
@@ -207,6 +206,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#007AFF",
     fontWeight: "400",
+  },
+  headerButton: {
+    backgroundColor: "#E5F1FD",
+    borderRadius: 50,
+    color: "#40629C",
+    marginHorizontal: 2,
+    padding: 10,
+    width: null,
   },
 });
 
