@@ -1,7 +1,7 @@
 import CustomHeader from "@/components/CustomHeader";
 import SelectionActionsModal from "@/components/ui/SelectionActionsModal";
 import StyleSettingsModal from "@/components/ui/StyleSettingsModal";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
 import * as FileSystem from "expo-file-system";
 import { Stack, useRouter } from "expo-router";
@@ -96,6 +96,10 @@ const Read = () => {
   const [isSelectionModalVisible, setSelectionModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isNavVisible, setNavVisible] = useState(false);
+
+  const handleChatPress = () => {
+    console.log("Кнопка чата с ИИ нажата!");
+  };
 
   const navigateToBooksScreen = () => {
     router.push("/books");
@@ -435,6 +439,14 @@ const Read = () => {
         </View>
       )}
 
+      <TouchableOpacity style={styles.chatButton} onPress={handleChatPress}>
+        <Ionicons
+          name="chatbubbles-outline"
+          size={30} // Сделаем иконку чуть побольше
+          color="white" // Используем цвет из темы
+        />
+      </TouchableOpacity>
+
       <StyleSettingsModal
         isVisible={isModalVisible}
         onClose={closeModal}
@@ -512,6 +524,26 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: 30,
+  },
+  chatButton: {
+    position: "absolute",
+    bottom: 40,
+    alignSelf: "center",
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: "rgba(0, 122, 255, 0.9)",
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4.65,
+    elevation: 8,
+    opacity: 0.6,
   },
 });
 
