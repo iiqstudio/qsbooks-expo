@@ -2,9 +2,15 @@ import CustomHeader from "@/components/CustomHeader";
 import SelectionActionsModal from "@/components/ui/SelectionActionsModal";
 import StyleSettingsModal from "@/components/ui/StyleSettingsModal";
 import * as Clipboard from "expo-clipboard";
+import * as FileSystem from "expo-file-system";
 import { Stack, useRouter } from "expo-router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { SafeAreaView, Share, StyleSheet } from "react-native";
+import {
+  ActivityIndicator,
+  SafeAreaView,
+  Share,
+  StyleSheet,
+} from "react-native";
 import { WebView } from "react-native-webview";
 
 const TOOLTIP_WIDTH = 250;
@@ -56,6 +62,19 @@ interface BookData {
   chapters: Chapter[];
 }
 
+const CDN_BASE_URL = "https://cdn.jsdelivr.net/gh/iiqstudio/bible-test/";
+const CACHE_DIRECTORY = FileSystem.documentDirectory + "bible_books/";
+
+const ensureDirExists = async () => {
+  const dirInfo = await FileSystem.getInfoAsync(CACHE_DIRECTORY);
+  if (!dirInfo.exists) {
+    console.log("Создаем директорию для кэша:", CACHE_DIRECTORY);
+    await FileSystem.makeDirectoryAsync(CACHE_DIRECTORY, {
+      intermediates: true,
+    });
+  }
+};
+
 const Read = () => {
   const [content, setContent] = useState("");
   const [fontSize, setFontSize] = useState(18);
@@ -72,6 +91,7 @@ const Read = () => {
   const [currentChapter, setCurrentChapter] = useState(1);
   const [selectedText, setSelectedText] = useState("");
   const [isSelectionModalVisible, setSelectionModalVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const navigateToBooksScreen = () => {
     router.push("/books");
@@ -169,19 +189,52 @@ const Read = () => {
   }, [activeTheme, fontSize]);
 
   useEffect(() => {
-    fetch("https://cdn.jsdelivr.net/gh/iiqstudio/bible-test/1ch.json")
-      .then((res) => res.json())
-      .then((data: BookData) => {
-        setBookData(data);
-        let html = `<h1>${data.book}</h1>`;
-        data.chapters.forEach((ch) => {
+    const loadBook = async (language: string, bookId: string) => {
+      setIsLoading(true);
+      await ensureDirExists();
+
+      const fileName = `${language}_${bookId}.json`;
+      const localUri = CACHE_DIRECTORY + fileName;
+      const remoteUrl = `${CDN_BASE_URL}${bookId}.json`;
+
+      const fileInfo = await FileSystem.getInfoAsync(localUri);
+
+      let bookJsonData = null;
+
+      if (fileInfo.exists) {
+        console.log("Загружаем книгу из кэша:", localUri);
+        const cachedContent = await FileSystem.readAsStringAsync(localUri);
+        bookJsonData = JSON.parse(cachedContent);
+      } else {
+        console.log("Загружаем книгу с CDN:", remoteUrl);
+        try {
+          const { uri } = await FileSystem.downloadAsync(remoteUrl, localUri);
+          console.log("Книга сохранена в кэш:", uri);
+          const newContent = await FileSystem.readAsStringAsync(uri);
+          bookJsonData = JSON.parse(newContent);
+        } catch (error) {
+          console.error("Ошибка загрузки книги с CDN:", error);
+          setContent("<h1>Не удалось загрузить книгу</h1>");
+          setIsLoading(false);
+          return;
+        }
+      }
+
+      if (bookJsonData) {
+        setBookData(bookJsonData);
+        let html = `<h1>${bookJsonData.book}</h1>`;
+        bookJsonData.chapters.forEach((ch) => {
           html += `<h2 id="chapter-${ch.chapter_number}">${ch.title}</h2>`;
           ch.verses.forEach((v) => {
             html += `<p><span>${v.verse_number}. ${v.text}</span></p>`;
           });
         });
         setContent(html);
-      });
+      }
+      setIsLoading(false);
+    };
+
+    loadBook("ru", "1ch");
   }, []);
 
   const onMessage = (event: any) => {
@@ -259,6 +312,23 @@ const Read = () => {
       <body>${content}</body>
     </html>
   `;
+
+  if (isLoading) {
+    return (
+      <SafeAreaView
+        style={[
+          styles.container,
+          {
+            backgroundColor: activeTheme.headerBg,
+            justifyContent: "center",
+            alignItems: "center",
+          },
+        ]}
+      >
+        <ActivityIndicator size="large" color={activeTheme.textColor} />
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView
