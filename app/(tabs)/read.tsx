@@ -1,6 +1,7 @@
 import CustomHeader from "@/components/CustomHeader";
 import SelectionActionsModal from "@/components/ui/SelectionActionsModal";
 import StyleSettingsModal from "@/components/ui/StyleSettingsModal";
+import { AntDesign } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
 import * as FileSystem from "expo-file-system";
 import { Stack, useRouter } from "expo-router";
@@ -10,6 +11,8 @@ import {
   SafeAreaView,
   Share,
   StyleSheet,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { WebView } from "react-native-webview";
 
@@ -92,6 +95,7 @@ const Read = () => {
   const [selectedText, setSelectedText] = useState("");
   const [isSelectionModalVisible, setSelectionModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isNavVisible, setNavVisible] = useState(false);
 
   const navigateToBooksScreen = () => {
     router.push("/books");
@@ -154,6 +158,19 @@ const Read = () => {
           }
         } catch (e) { /* ... */ }
 
+        let hasReachedEnd = false;
+        window.addEventListener('scroll', () => {
+        const isAtBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 50;
+        if (isAtBottom && !hasReachedEnd) {
+          hasReachedEnd = true;
+          window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'show-nav' }));
+        } 
+        else if (!isAtBottom && hasReachedEnd) {
+          hasReachedEnd = false;
+          window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'hide-nav' }));
+        }
+      });
+
         true;
       })();
     `;
@@ -198,44 +215,50 @@ const Read = () => {
       const remoteUrl = `${CDN_BASE_URL}${bookId}.json`;
 
       const fileInfo = await FileSystem.getInfoAsync(localUri);
-
       let bookJsonData = null;
 
-      if (fileInfo.exists) {
-        console.log("Загружаем книгу из кэша:", localUri);
-        const cachedContent = await FileSystem.readAsStringAsync(localUri);
-        bookJsonData = JSON.parse(cachedContent);
-      } else {
-        console.log("Загружаем книгу с CDN:", remoteUrl);
-        try {
+      try {
+        if (fileInfo.exists) {
+          console.log("Загружаем книгу из кэша:", localUri);
+          const cachedContent = await FileSystem.readAsStringAsync(localUri);
+          bookJsonData = JSON.parse(cachedContent);
+        } else {
+          console.log("Загружаем книгу с CDN:", remoteUrl);
           const { uri } = await FileSystem.downloadAsync(remoteUrl, localUri);
-          console.log("Книга сохранена в кэш:", uri);
           const newContent = await FileSystem.readAsStringAsync(uri);
           bookJsonData = JSON.parse(newContent);
-        } catch (error) {
-          console.error("Ошибка загрузки книги с CDN:", error);
-          setContent("<h1>Не удалось загрузить книгу</h1>");
-          setIsLoading(false);
-          return;
         }
-      }
-
-      if (bookJsonData) {
         setBookData(bookJsonData);
-        let html = `<h1>${bookJsonData.book}</h1>`;
-        bookJsonData.chapters.forEach((ch) => {
-          html += `<h2 id="chapter-${ch.chapter_number}">${ch.title}</h2>`;
-          ch.verses.forEach((v) => {
-            html += `<p><span>${v.verse_number}. ${v.text}</span></p>`;
-          });
-        });
-        setContent(html);
+      } catch (error) {
+        console.error("Ошибка загрузки книги:", error);
+        setContent("<h1>Не удалось загрузить книгу</h1>");
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
 
     loadBook("ru", "1ch");
   }, []);
+
+  useEffect(() => {
+    if (bookData) {
+      setNavVisible(false);
+      const chapterData = bookData.chapters.find(
+        (ch) => ch.chapter_number === currentChapter
+      );
+
+      if (chapterData) {
+        let html = `<h1>${bookData.book}</h1>`;
+        html += `<h2 id="chapter-${chapterData.chapter_number}">${chapterData.title}</h2>`;
+        chapterData.verses.forEach((v) => {
+          html += `<p><span>${v.verse_number}. ${v.text}</span></p>`;
+        });
+        setContent(html);
+      } else {
+        setContent(`<h1>Глава ${currentChapter} не найдена</h1>`);
+      }
+    }
+  }, [bookData, currentChapter]);
 
   const onMessage = (event: any) => {
     try {
@@ -258,8 +281,15 @@ const Read = () => {
           break;
         case "chapter-change":
           if (data.chapter !== currentChapter) {
-            setCurrentChapter(data.chapter);
+            // setCurrentChapter(data.chapter);
           }
+          break;
+        case "show-nav":
+          setNavVisible(true);
+          break;
+
+        case "hide-nav":
+          setNavVisible(false);
           break;
       }
     } catch (error) {
@@ -288,6 +318,23 @@ const Read = () => {
     closeSelectionModal();
   };
 
+  const goToNextChapter = () => {
+    if (bookData && currentChapter < bookData.chapters.length) {
+      setCurrentChapter((prev) => prev + 1);
+    }
+  };
+
+  const goToPreviousChapter = () => {
+    if (currentChapter > 1) {
+      setCurrentChapter((prev) => prev - 1);
+    }
+  };
+
+  const isFirstChapter = currentChapter === 1;
+  const isLastChapter = bookData
+    ? currentChapter === bookData.chapters.length
+    : true;
+
   const htmlContent = `
     <html>
       <head>
@@ -306,6 +353,7 @@ const Read = () => {
             line-height: 1.6; 
             padding: 16px; 
             transition: background-color 0.3s, color 0.3s;
+            padding-bottom: 80px;
           }
         </style>
       </head>
@@ -356,6 +404,36 @@ const Read = () => {
         injectedJavaScript={injectedJavaScript}
         style={{ backgroundColor: activeTheme.bgColor }}
       />
+
+      {isNavVisible && (
+        <View style={styles.navContainer}>
+          <TouchableOpacity
+            onPress={goToPreviousChapter}
+            disabled={isFirstChapter}
+          >
+            <AntDesign
+              name="leftcircleo"
+              size={32}
+              color={
+                isFirstChapter
+                  ? activeTheme.separatorColor
+                  : activeTheme.headerButtonColor
+              }
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={goToNextChapter} disabled={isLastChapter}>
+            <AntDesign
+              name="rightcircleo"
+              size={32}
+              color={
+                isLastChapter
+                  ? activeTheme.separatorColor
+                  : activeTheme.headerButtonColor
+              }
+            />
+          </TouchableOpacity>
+        </View>
+      )}
 
       <StyleSettingsModal
         isVisible={isModalVisible}
@@ -425,6 +503,15 @@ const styles = StyleSheet.create({
     width: 1,
     height: "40%",
     backgroundColor: "rgba(0, 0, 0, 0.2)",
+  },
+  navContainer: {
+    position: "absolute",
+    bottom: 60,
+    left: 0,
+    right: 0,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 30,
   },
 });
 
