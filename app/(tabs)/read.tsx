@@ -4,7 +4,7 @@ import StyleSettingsModal from "@/components/ui/StyleSettingsModal";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
 import * as FileSystem from "expo-file-system";
-import { Stack, useRouter } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
@@ -82,16 +82,19 @@ const Read = () => {
   const [content, setContent] = useState("");
   const [fontSize, setFontSize] = useState(18);
   const [activeTheme, setActiveTheme] = useState(themes.light);
+  const { bookId, chapter } = useLocalSearchParams();
   const [selection, setSelection] = useState({
     visible: false,
     text: "",
     position: { top: 0, left: 0 },
   });
   const router = useRouter();
-  const webViewRef = useRef(null);
+  const webViewRef = useRef<WebView>(null);
   const [isModalVisible, setModalVisible] = useState(false);
   const [bookData, setBookData] = useState<BookData | null>(null);
-  const [currentChapter, setCurrentChapter] = useState(1);
+  const [currentChapter, setCurrentChapter] = useState(
+    parseInt(chapter as string, 10) || 1
+  );
   const [selectedText, setSelectedText] = useState("");
   const [isSelectionModalVisible, setSelectionModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -210,13 +213,13 @@ const Read = () => {
   }, [activeTheme, fontSize]);
 
   useEffect(() => {
-    const loadBook = async (language: string, bookId: string) => {
+    const loadBook = async (language: string, bookIdToLoad: string) => {
       setIsLoading(true);
       await ensureDirExists();
 
-      const fileName = `${language}_${bookId}.json`;
+      const fileName = `${language}_${bookIdToLoad}.json`;
       const localUri = CACHE_DIRECTORY + fileName;
-      const remoteUrl = `${CDN_BASE_URL}${bookId}.json`;
+      const remoteUrl = `${CDN_BASE_URL}${bookIdToLoad}.json`;
 
       const fileInfo = await FileSystem.getInfoAsync(localUri);
       let bookJsonData = null;
@@ -241,8 +244,10 @@ const Read = () => {
       }
     };
 
-    loadBook("ru", "1ch");
-  }, []);
+    if (bookId) {
+      loadBook("ru", bookId as string);
+    }
+  }, [bookId]);
 
   useEffect(() => {
     if (bookData) {
@@ -285,7 +290,6 @@ const Read = () => {
           break;
         case "chapter-change":
           if (data.chapter !== currentChapter) {
-            // setCurrentChapter(data.chapter);
           }
           break;
         case "show-nav":
@@ -440,11 +444,7 @@ const Read = () => {
       )}
 
       <TouchableOpacity style={styles.chatButton} onPress={handleChatPress}>
-        <Ionicons
-          name="chatbubbles-outline"
-          size={30} // Сделаем иконку чуть побольше
-          color="white" // Используем цвет из темы
-        />
+        <Ionicons name="chatbubbles-outline" size={30} color="white" />
       </TouchableOpacity>
 
       <StyleSettingsModal

@@ -29,7 +29,7 @@ const allBooksOfTheBible = [
   { name: "2 Царств", chapters: 24 },
   { name: "3 Царств", chapters: 22 },
   { name: "4 Царств", chapters: 25 },
-  { name: "1 Паралипоменон", chapters: 29 },
+  { name: "1 Паралипоменон", chapters: 29, id: "1ch" },
   { name: "2 Паралипоменон", chapters: 36 },
   { name: "Ездра", chapters: 10 },
   { name: "Неемия", chapters: 13 },
@@ -64,7 +64,7 @@ const allBooksOfTheBible = [
   { name: "Иоанн", chapters: 21 },
   { name: "Деяния", chapters: 28 },
   { name: "Римлянам", chapters: 16 },
-  { name: "1 Коринфянам", chapters: 16 },
+  { name: "1 Коринфянам", chapters: 16, id: "1co" },
   { name: "2 Коринфянам", chapters: 13 },
   { name: "Галатам", chapters: 6 },
   { name: "Ефесянам", chapters: 6 },
@@ -87,7 +87,7 @@ const allBooksOfTheBible = [
   { name: "Откровение", chapters: 22 },
 ];
 
-const BookItem = ({ book, isExpanded, onPress }: any) => {
+const BookItem = ({ book, isExpanded, onPress, onChapterPress }: any) => {
   const chapters = Array.from({ length: book.chapters }, (_, i) => i + 1);
 
   return (
@@ -104,9 +104,7 @@ const BookItem = ({ book, isExpanded, onPress }: any) => {
             <TouchableOpacity
               key={chapterNumber}
               style={styles.chapterTouchable}
-              onPress={() =>
-                console.log(`Переход к: ${book.name}, Глава ${chapterNumber}`)
-              }
+              onPress={() => onChapterPress(book, chapterNumber)}
             >
               <Text style={styles.chapterText}>{chapterNumber}</Text>
             </TouchableOpacity>
@@ -118,12 +116,46 @@ const BookItem = ({ book, isExpanded, onPress }: any) => {
 };
 
 function BooksScreen(props: any) {
-  const [expandedBook, setExpandedBook] = useState("Исход");
+  const [expandedBook, setExpandedBook] = useState(null);
+  const [bookData, setBookData] = useState(null);
 
-  const handleToggleBook = (bookName: any) => {
-    setExpandedBook((prevExpandedBook) =>
-      prevExpandedBook === bookName ? null : bookName
-    );
+  const handleToggleBook = async (book: any) => {
+    const isOpening = expandedBook !== book.name;
+
+    if (isOpening) {
+      setExpandedBook(book.name);
+      if (book.id) {
+        try {
+          console.log(`Запрос данных для: ${book.name}...`);
+          const response = await fetch(
+            `https://cdn.jsdelivr.net/gh/iiqstudio/bible-test/${book.id}.json`
+          );
+          const data = await response.json();
+          setBookData(data);
+          console.log(`Данные для "${book.name}" успешно загружены.`);
+        } catch (error) {
+          console.error("Ошибка при загрузке данных книги:", error);
+          setBookData(null);
+        }
+      } else {
+        setBookData(null);
+      }
+    } else {
+      setExpandedBook(null);
+      setBookData(null);
+    }
+  };
+
+  const handleChapterPress = (book: any, chapterNumber: number) => {
+    if (book.id) {
+      console.log(`Переход к книге: ${book.id}, Глава: ${chapterNumber}`);
+      router.push({
+        pathname: "/read",
+        params: { bookId: book.id, chapter: chapterNumber },
+      });
+    } else {
+      console.log(`Для книги "${book.name}" нет ссылки, переход невозможен.`);
+    }
   };
 
   return (
@@ -148,7 +180,8 @@ function BooksScreen(props: any) {
             key={book.name}
             book={book}
             isExpanded={expandedBook === book.name}
-            onPress={() => handleToggleBook(book.name)}
+            onPress={() => handleToggleBook(book)}
+            onChapterPress={handleChapterPress}
           />
         ))}
       </ScrollView>
