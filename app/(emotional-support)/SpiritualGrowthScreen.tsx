@@ -19,8 +19,7 @@ const SpiritualGrowthScreen = () => {
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
 
   const handleFinishProfile = () => {
-    // Финальный шаг этого флоу, переходим на экран с предложением
-    router.push("/UnlockScreen");
+    router.push("/PersonalizingScreen");
   };
 
   return (

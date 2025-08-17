@@ -8,6 +8,7 @@ export default function EmotionalSupportLayout() {
       <Stack.Screen name="ReadingFrequencyScreen" />
       <Stack.Screen name="StudyChallengeScreen" />
       <Stack.Screen name="LanguageScreen" />
+      <Stack.Screen name="PersonalizingScreen" />
     </Stack>
   );
 }
