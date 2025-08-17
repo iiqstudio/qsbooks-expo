@@ -20,7 +20,7 @@ const LanguageScreen = () => {
     console.log(
       `Language selected: ${languageOptions[selectedLanguage!].text}`
     );
-    router.replace("/(tabs)");
+    router.push("/AskQuestionScreen");
   };
 
   return (
