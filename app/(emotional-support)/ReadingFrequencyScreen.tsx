@@ -19,7 +19,7 @@ const ReadingFrequencyScreen = () => {
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
 
   const handleContinue = () => {
-    console.log(`Selected frequency index: ${selectedOption}`);
+    router.push("/StudyChallengeScreen");
   };
 
   return (
