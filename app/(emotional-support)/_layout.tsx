@@ -12,6 +12,7 @@ export default function EmotionalSupportLayout() {
       <Stack.Screen name="SpiritualProfileScreen" />
       <Stack.Screen name="AwaitsScreen" />
       <Stack.Screen name="JoinTransformedScreen" />
+      <Stack.Screen name="FinalOfferScreen" />
     </Stack>
   );
 }

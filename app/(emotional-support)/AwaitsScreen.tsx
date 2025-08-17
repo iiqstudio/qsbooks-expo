@@ -17,7 +17,7 @@ const AwaitsScreen = () => {
   const router = useRouter();
 
   const handleContinue = () => {
-    router.replace("/(tabs)");
+    router.replace("/JoinTransformedScreen");
   };
 
   return (
@@ -47,16 +47,14 @@ const AwaitsScreen = () => {
   );
 };
 
-// --- Обновляем Стили ---
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: "#F9F9F7",
   },
-  // 3. Новый стиль для контейнера списка
   checklistContainer: {
-    alignSelf: "center", // Это магия! Контейнер сожмется до ширины контента и встанет по центру
-    marginTop: 20, // Добавим немного воздуха после заголовка
+    alignSelf: "center",
+    marginTop: 20,
   },
   checklistItem: {
     flexDirection: "row",

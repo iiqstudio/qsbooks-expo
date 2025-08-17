@@ -23,8 +23,7 @@ const JoinTransformedScreen = () => {
   const router = useRouter();
 
   const handleSeeOffer = () => {
-    // Переход на самый последний экран
-    // router.push('/FinalOfferScreen'); // Имя следующего экрана
+    router.push("/FinalOfferScreen");
   };
 
   return (
@@ -51,9 +50,8 @@ const JoinTransformedScreen = () => {
             </Text>
           </View>
           <Text style={styles.subStatsText}>89% of members read daily</Text>
-
-          <CustomButton title="See My Offer" onPress={handleSeeOffer} />
         </View>
+        <CustomButton title="See My Offer" onPress={handleSeeOffer} />
       </Container>
     </SafeAreaView>
   );
@@ -64,7 +62,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F9F9F7",
   },
-  // Card Styles
   card: {
     backgroundColor: "#FFFFFF",
     borderRadius: 24,
@@ -93,7 +90,6 @@ const styles = StyleSheet.create({
     color: "#667085",
     textAlign: "center",
   },
-  // Footer Styles
   footer: {
     alignItems: "center",
   },
