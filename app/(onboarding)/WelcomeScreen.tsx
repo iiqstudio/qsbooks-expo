@@ -1,4 +1,5 @@
 import SelectableList from "@/components/ui/SelectableList";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 
@@ -14,7 +15,24 @@ const options = [
 ];
 
 export default function OnboardingScreen() {
-  const [selectedHobbyOption, setSelectedHobbyOption] = useState(null);
+  const router = useRouter();
+  const [selectedOption, setSelectedOption] = useState<number | null>(null);
+  const [selectedHobbyOption, setSelectedHobbyOption] = useState<number | null>(
+    null
+  );
+
+  const handleSelect = (index: number) => {
+    // Сначала обновляем UI, чтобы показать выбор
+    setSelectedOption(index);
+
+    // Проверяем, был ли нажат первый элемент (с индексом 0)
+    if (index === 0) {
+      // Если да, переходим на новый экран
+      router.push("/OnboardingPeaceScreen");
+    }
+    // Здесь можно будет добавить другую логику для других кнопок, если понадобится
+    // else if (index === 1) { navigation.navigate('AnotherScreen'); }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -25,7 +43,7 @@ export default function OnboardingScreen() {
       <SelectableList
         options={options}
         selectedOption={selectedHobbyOption}
-        onSelect={setSelectedHobbyOption}
+        onSelect={handleSelect}
       />
       <View style={styles.footer}>
         <Text style={styles.footerText}>
