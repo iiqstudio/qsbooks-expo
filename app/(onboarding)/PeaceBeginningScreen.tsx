@@ -8,7 +8,7 @@ const PeaceBeginningScreen = () => {
   const router = useRouter();
 
   const handleNext = () => {
-    router.push("/PeaceBeginningScreen");
+    router.push("/LanguageScreen");
   };
 
   return (

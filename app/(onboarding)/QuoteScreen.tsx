@@ -6,7 +6,7 @@ import { Platform, SafeAreaView, StyleSheet, Text, View } from "react-native";
 const QuoteScreen = () => {
   const router = useRouter();
   const handleNext = () => {
-    router.push("/");
+    router.push("/PeaceBeginningScreen");
   };
 
   return (
