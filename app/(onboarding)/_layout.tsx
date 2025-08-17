@@ -7,7 +7,8 @@ export default function OnboardingLayout() {
       <Stack.Screen name="ValidationScreen" />
       <Stack.Screen name="RewardScreen" />
       <Stack.Screen name="PaywallScreen" />
-      <Stack.Screen name="OnboardingPeace" />
+      <Stack.Screen name="OnboardingPeaceScreen" />
+      <Stack.Screen name="QuoteScreen" />
     </Stack>
   );
 }

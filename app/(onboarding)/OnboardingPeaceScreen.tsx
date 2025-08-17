@@ -1,11 +1,21 @@
 import ProgressBar from "@/components/ui/ProgressBar";
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
+import { useRouter } from "expo-router";
+import React, { useEffect } from "react";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import TimerSvg from "../../assets/images/svg/timer.svg";
 
 const OnboardingPeaceScreen = () => {
   const navigation = useNavigation();
+  const router = useRouter();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      router.replace("/QuoteScreen");
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <SafeAreaView style={styles.safeArea}>
