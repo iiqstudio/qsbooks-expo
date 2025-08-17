@@ -26,6 +26,9 @@ export default function OnboardingScreen() {
     if (index === 0) {
       router.push("/OnboardingPeaceScreen");
     }
+    if (index === 1) {
+      router.push("/PersonalPathScreen");
+    }
   };
 
   return (
