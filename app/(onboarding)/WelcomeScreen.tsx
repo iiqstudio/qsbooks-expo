@@ -1,12 +1,6 @@
+import SelectableList from "@/components/ui/SelectableList";
 import React, { useState } from "react";
-import {
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 
 const options = [
   { emoji: "🌱", text: "New to faith - just starting my spiritual journey" },
@@ -20,7 +14,7 @@ const options = [
 ];
 
 export default function OnboardingScreen() {
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedHobbyOption, setSelectedHobbyOption] = useState(null);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -28,31 +22,11 @@ export default function OnboardingScreen() {
         <Text style={styles.title}>Who are you?</Text>
         <Text style={styles.subtitle}>Choose what describes you best.</Text>
       </View>
-      <ScrollView
-        style={styles.optionsContainer}
-        showsVerticalScrollIndicator={false}
-      >
-        {options.map((option, index) => (
-          <TouchableOpacity
-            key={index}
-            style={[
-              styles.option,
-              selectedOption === index && styles.selectedOption,
-            ]}
-            onPress={() => setSelectedOption(index)}
-          >
-            <Text style={styles.emoji}>{option.emoji}</Text>
-            <Text
-              style={[
-                styles.optionText,
-                selectedOption === index && styles.selectedOptionText,
-              ]}
-            >
-              {option.text}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
+      <SelectableList
+        options={options}
+        selectedOption={selectedHobbyOption}
+        onSelect={setSelectedHobbyOption}
+      />
       <View style={styles.footer}>
         <Text style={styles.footerText}>
           Don't worry - you can explore all features once you start.
