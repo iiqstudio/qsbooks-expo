@@ -5,11 +5,11 @@ import { useRouter } from "expo-router";
 import React from "react";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 
-const AskQuestionScreen = () => {
+const PrayerScreen = () => {
   const router = useRouter();
 
-  const handleCompleteOnboarding = () => {
-    router.replace("/PrayerScreen");
+  const handleFinishOnboarding = () => {
+    router.replace("/SummaryScreen");
   };
 
   return (
@@ -18,12 +18,12 @@ const AskQuestionScreen = () => {
 
       <View style={styles.container}>
         <View>
-          <Text style={styles.title}>Ask Anything, Get Instant Answers</Text>
+          <Text style={styles.title}>Turn Insight Into Prayer Instantly</Text>
           <View style={styles.chatContainer}>
             <Text style={styles.authorYou}>You</Text>
             <View style={styles.userBubble}>
               <Text style={styles.bubbleTextUser}>
-                What does this mean for anxiety?
+                Turn this into a prayer for me
               </Text>
             </View>
 
@@ -37,17 +37,16 @@ const AskQuestionScreen = () => {
             </View>
             <View style={styles.aiBubble}>
               <Text style={styles.bubbleTextAi}>
-                It reminds us God's plan is for hope, not fear. When anxiety
-                tells you there's no future, this verse says God has one for
-                you.
+                Lord, thank you for your plan for my future filled with hope.
+                When I feel anxious, remind me of your promise...
               </Text>
             </View>
           </View>
         </View>
 
         <CustomButton
-          title="Turn Insight to Prayer"
-          onPress={handleCompleteOnboarding}
+          title="See Everything You Did"
+          onPress={handleFinishOnboarding}
         />
       </View>
     </SafeAreaView>
@@ -126,4 +125,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AskQuestionScreen;
+export default PrayerScreen;
