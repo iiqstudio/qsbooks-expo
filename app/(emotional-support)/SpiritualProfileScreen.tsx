@@ -15,7 +15,7 @@ const SpiritualProfileScreen = () => {
   const router = useRouter();
 
   const handleUnlockPath = () => {
-    router.push("/UnlockScreen");
+    router.push("/AwaitsScreen");
   };
 
   return (
