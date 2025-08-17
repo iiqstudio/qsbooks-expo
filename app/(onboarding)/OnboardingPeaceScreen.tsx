@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 18,
     fontWeight: "500",
-    color: "#667085", // Серый цвет для подзаголовка
+    color: "#667085",
     textAlign: "center",
   },
 });

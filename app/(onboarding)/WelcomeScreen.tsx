@@ -22,16 +22,10 @@ export default function OnboardingScreen() {
   );
 
   const handleSelect = (index: number) => {
-    // Сначала обновляем UI, чтобы показать выбор
     setSelectedOption(index);
-
-    // Проверяем, был ли нажат первый элемент (с индексом 0)
     if (index === 0) {
-      // Если да, переходим на новый экран
       router.push("/OnboardingPeaceScreen");
     }
-    // Здесь можно будет добавить другую логику для других кнопок, если понадобится
-    // else if (index === 1) { navigation.navigate('AnotherScreen'); }
   };
 
   return (
