@@ -1,4 +1,5 @@
 import CustomButton from "@/components/ui/CustomButton";
+import CustomTitle from "@/components/ui/CustomTitle";
 import ProgressBar from "@/components/ui/ProgressBar";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -21,11 +22,11 @@ const SummaryScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ProgressBar progress={0.95} onBackPress={router.back} />
+      <ProgressBar progress={100} onBackPress={router.back} />
 
       <View style={styles.container}>
         <View>
-          <Text style={styles.title}>Look What You Just Did in 90 Seconds</Text>
+          <CustomTitle>Look What You Just Did in 90 Seconds</CustomTitle>
           <Text style={styles.subtitle}>
             You've already used the most powerful features.
           </Text>
@@ -54,14 +55,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingBottom: 24,
     justifyContent: "space-between",
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "800",
-    color: "#1D2939",
-    textAlign: "center",
-    marginTop: 24,
-    marginBottom: 12,
   },
   subtitle: {
     fontSize: 18,

@@ -1,4 +1,5 @@
 import CustomButton from "@/components/ui/CustomButton";
+import CustomTitle from "@/components/ui/CustomTitle";
 import ProgressBar from "@/components/ui/ProgressBar";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -14,11 +15,11 @@ const AskQuestionScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ProgressBar progress={1} onBackPress={router.back} />
+      <ProgressBar progress={0.75} onBackPress={router.back} />
 
       <View style={styles.container}>
         <View>
-          <Text style={styles.title}>Ask Anything, Get Instant Answers</Text>
+          <CustomTitle>Ask Anything, Get Instant Answers</CustomTitle>
           <View style={styles.chatContainer}>
             <Text style={styles.authorYou}>You</Text>
             <View style={styles.userBubble}>
@@ -64,14 +65,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingBottom: 24,
     justifyContent: "space-between",
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "800",
-    color: "#1D2939",
-    textAlign: "center",
-    marginTop: 24,
-    marginBottom: 32,
   },
   chatContainer: {
     paddingHorizontal: 8,

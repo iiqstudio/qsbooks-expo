@@ -13,7 +13,7 @@ const PeaceBeginningScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ProgressBar progress={0.75} onBackPress={() => router.back()} />
+      <ProgressBar progress={0.45} onBackPress={() => router.back()} />
 
       <View style={styles.container}>
         <View style={styles.content}>
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 32,
-    fontWeight: "800", // Extra Bold
+    fontWeight: "800",
     color: "#1D2939",
     textAlign: "center",
     marginBottom: 16,

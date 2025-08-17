@@ -1,4 +1,5 @@
 import CustomButton from "@/components/ui/CustomButton";
+import CustomTitle from "@/components/ui/CustomTitle";
 import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -28,7 +29,7 @@ const UnlockScreen = () => {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <View>
-          <Text style={styles.title}>Unlock Unlimited Daily Peace</Text>
+          <CustomTitle>Unlock Unlimited Daily Peace</CustomTitle>
 
           <View style={styles.card}>
             <Text style={styles.cardTitle}>Your Premium Access Includes:</Text>
@@ -91,13 +92,6 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     paddingBottom: 24,
     justifyContent: "space-between",
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "800",
-    color: "#1D2939",
-    textAlign: "center",
-    marginBottom: 40,
   },
   card: {
     backgroundColor: "#FFFFFF",

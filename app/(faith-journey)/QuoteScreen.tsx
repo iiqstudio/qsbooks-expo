@@ -11,7 +11,7 @@ const QuoteScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ProgressBar progress={0.5} onBackPress={() => router.back()} />
+      <ProgressBar progress={0.3} onBackPress={() => router.back()} />
 
       <View style={styles.container}>
         <View style={styles.content}>
@@ -58,7 +58,6 @@ const styles = StyleSheet.create({
     padding: 32,
     width: "100%",
     marginBottom: 32,
-    // Тень
     ...Platform.select({
       ios: {
         shadowColor: "#1D2939",
@@ -76,7 +75,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: "#1D2939",
     textAlign: "center",
-    lineHeight: 32, // Увеличиваем межстрочный интервал
+    lineHeight: 32,
     marginBottom: 24,
   },
   quoteSource: {

@@ -1,11 +1,11 @@
 import CustomButton from "@/components/ui/CustomButton";
+import CustomTitle from "@/components/ui/CustomTitle";
 import ProgressBar from "@/components/ui/ProgressBar";
 import SelectableList from "@/components/ui/SelectableList";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 
-// Определяем данные для списка
 const languageOptions = [
   { emoji: "🇺🇸", text: "English" },
   { emoji: "🇪🇸", text: "Español" },
@@ -25,11 +25,11 @@ const LanguageScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ProgressBar progress={0.9} onBackPress={router.back} />
+      <ProgressBar progress={0.6} onBackPress={router.back} />
 
       <View style={styles.container}>
         <View>
-          <Text style={styles.title}>Choose Your Bible Language</Text>
+          <CustomTitle>Choose Your Bible Language</CustomTitle>
           <Text style={styles.subtitle}>
             This sets the language for all Scripture text.
           </Text>
@@ -57,14 +57,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingBottom: 24,
     justifyContent: "space-between",
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "800",
-    color: "#1D2939",
-    textAlign: "center",
-    marginTop: 24,
-    marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,

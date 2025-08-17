@@ -1,3 +1,4 @@
+import CustomTitle from "@/components/ui/CustomTitle";
 import ProgressBar from "@/components/ui/ProgressBar";
 import { useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
@@ -19,16 +20,14 @@ const OnboardingPeaceScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ProgressBar progress={0.25} onBackPress={() => navigation.goBack()} />
+      <ProgressBar progress={0.15} onBackPress={() => navigation.goBack()} />
 
       <View style={styles.container}>
         <View style={styles.iconContainer}>
           <TimerSvg width={80} height={80} />
         </View>
 
-        <Text style={styles.title}>
-          Get Your Daily Dose of Peace in 30 Seconds
-        </Text>
+        <CustomTitle>Get Your Daily Dose of Peace in 30 Seconds</CustomTitle>
 
         <Text style={styles.subtitle}>
           Experience the power of Scripture immediately.
@@ -57,13 +56,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 48,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "800",
-    color: "#1D2939",
-    textAlign: "center",
-    marginBottom: 16,
   },
   subtitle: {
     fontSize: 18,
