@@ -11,6 +11,8 @@ export default function OnboardingLayout() {
       <Stack.Screen name="LanguageScreen" />
       <Stack.Screen name="AskQuestionScreen" />
       <Stack.Screen name="PrayerScreen" />
+      <Stack.Screen name="SummaryScreen" />
+      <Stack.Screen name="UnlockScreen" />
     </Stack>
   );
 }

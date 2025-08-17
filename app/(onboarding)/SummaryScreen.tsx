@@ -5,7 +5,6 @@ import { useRouter } from "expo-router";
 import React from "react";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 
-// Маленький компонент для элемента списка с галочкой
 const ChecklistItem = ({ text }: { text: string }) => (
   <View style={styles.checklistItem}>
     <MaterialCommunityIcons name="check-circle" size={24} color="#27AE60" />
@@ -17,8 +16,7 @@ const SummaryScreen = () => {
   const router = useRouter();
 
   const handleFinish = () => {
-    // Это точно последний шаг. Переходим в приложение.
-    router.replace("/(tabs)");
+    router.push("/UnlockScreen");
   };
 
   return (
@@ -32,7 +30,6 @@ const SummaryScreen = () => {
             You've already used the most powerful features.
           </Text>
 
-          {/* Список преимуществ */}
           <View style={styles.checklistContainer}>
             <ChecklistItem text="Felt instant daily peace" />
             <ChecklistItem text="Set your preferred language" />
@@ -79,13 +76,13 @@ const styles = StyleSheet.create({
   checklistItem: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 24, // Расстояние между пунктами
+    marginBottom: 24,
   },
   checklistText: {
     fontSize: 18,
     fontWeight: "600",
     color: "#1D2939",
-    marginLeft: 16, // Отступ от галочки
+    marginLeft: 16,
   },
 });
 
