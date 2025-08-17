@@ -19,7 +19,7 @@ const ScriptureMotivationScreen = () => {
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
 
   const handleContinue = () => {
-    console.log(`Selected option index: ${selectedOption}`);
+    router.push("/ReadingFrequencyScreen");
   };
 
   return (

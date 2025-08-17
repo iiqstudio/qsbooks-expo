@@ -11,7 +11,7 @@ const PersonalPathScreen = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       router.push("/ScriptureMotivationScreen");
-    }, 3000);
+    }, 2000);
 
     return () => clearTimeout(timer);
   }, []);
