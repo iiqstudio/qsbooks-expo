@@ -9,6 +9,7 @@ export default function OnboardingLayout() {
       <Stack.Screen name="PaywallScreen" />
       <Stack.Screen name="OnboardingPeaceScreen" />
       <Stack.Screen name="QuoteScreen" />
+      <Stack.Screen name="PeaceBeginningScreen" />
     </Stack>
   );
 }

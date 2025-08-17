@@ -1,18 +1,17 @@
 import CustomButton from "@/components/ui/CustomButton";
 import ProgressBar from "@/components/ui/ProgressBar";
-import { useNavigation } from "expo-router";
+import { useRouter } from "expo-router";
 import React from "react";
 import { Platform, SafeAreaView, StyleSheet, Text, View } from "react-native";
 const QuoteScreen = () => {
-  const navigation = useNavigation();
-
+  const router = useRouter();
   const handleNext = () => {
-    console.log("Button Pressed");
+    router.push("/");
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ProgressBar progress={0.5} onBackPress={() => navigation.goBack()} />
+      <ProgressBar progress={0.5} onBackPress={() => router.back()} />
 
       <View style={styles.container}>
         <View style={styles.content}>
