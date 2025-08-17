@@ -1,4 +1,4 @@
-import { Ionicons } from "@expo/vector-icons"; // Используем иконку из Expo
+import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import { Animated, Easing, SafeAreaView, StyleSheet } from "react-native";
@@ -35,7 +35,7 @@ const PersonalizingScreen = () => {
           const nextIndex = prevIndex + 1;
           if (nextIndex >= loadingTexts.length) {
             clearInterval(intervalId);
-            router.replace("/UnlockScreen");
+            router.replace("/SpiritualProfileScreen");
             return prevIndex;
           }
 
