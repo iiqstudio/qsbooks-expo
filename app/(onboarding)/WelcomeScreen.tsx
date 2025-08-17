@@ -1,91 +1,126 @@
-import { useRouter } from "expo-router";
-import React from "react";
+import React, { useState } from "react";
 import {
-  Dimensions,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
 
-const { width } = Dimensions.get("window");
+const options = [
+  { emoji: "🌱", text: "New to faith - just starting my spiritual journey" },
+  { emoji: "😰", text: "Struggling with daily stress and anxiety" },
+  { emoji: "🤔", text: "Reading Bible but confused by what it means" },
+  { emoji: "😔", text: "Feeling alone in my spiritual struggles" },
+  { emoji: "⏰", text: "Too busy for long Bible study sessions" },
+  { emoji: "🤷‍♂️", text: "Have doubts but still searching for answers" },
+  { emoji: "💔", text: "Going through a really hard time right now" },
+  { emoji: "📅", text: "Want to build a consistent daily reading habit" },
+];
 
-type NavigationProps = {
-  navigate: (screen: string, params: { emotion: string }) => void;
-};
-
-const EMOTION_TAGS = ["Anxious", "Grateful", "Overwhelmed", "Hopeful", "Lost"];
-
-const OnboardingNewScreen = () => {
-  const router = useRouter();
-
-  const handleTagPress = (emotion: string) => {
-    router.push({
-      pathname: "/ValidationScreen",
-      params: { emotion: emotion },
-    });
-  };
+export default function OnboardingScreen() {
+  const [selectedOption, setSelectedOption] = useState(null);
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
-        <Text style={styles.heading}>How are you, really?</Text>
-
-        <View style={styles.tagsContainer}>
-          {EMOTION_TAGS.map((tag) => (
-            <TouchableOpacity
-              key={tag}
-              style={styles.tag}
-              onPress={() => handleTagPress(tag)}
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Who are you?</Text>
+        <Text style={styles.subtitle}>Choose what describes you best.</Text>
+      </View>
+      <ScrollView
+        style={styles.optionsContainer}
+        showsVerticalScrollIndicator={false}
+      >
+        {options.map((option, index) => (
+          <TouchableOpacity
+            key={index}
+            style={[
+              styles.option,
+              selectedOption === index && styles.selectedOption,
+            ]}
+            onPress={() => setSelectedOption(index)}
+          >
+            <Text style={styles.emoji}>{option.emoji}</Text>
+            <Text
+              style={[
+                styles.optionText,
+                selectedOption === index && styles.selectedOptionText,
+              ]}
             >
-              <Text style={styles.tagText}>{tag}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+              {option.text}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+      <View style={styles.footer}>
+        <Text style={styles.footerText}>
+          Don't worry - you can explore all features once you start.
+        </Text>
       </View>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: "#FFFFFF",
-  },
   container: {
     flex: 1,
-    justifyContent: "center",
+    backgroundColor: "#F7F7F7",
     alignItems: "center",
+  },
+  header: {
+    alignItems: "center",
+    marginTop: 60,
+    marginBottom: 30,
     paddingHorizontal: 20,
   },
-  heading: {
-    fontSize: 28,
+  title: {
+    fontSize: 34,
     fontWeight: "bold",
-    color: "#212121",
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 18,
+    color: "#6B7280",
     textAlign: "center",
-    marginBottom: 40,
   },
-  tagsContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "center",
+  optionsContainer: {
     width: "100%",
+    paddingHorizontal: 20,
   },
-  tag: {
-    borderWidth: 1,
-    borderColor: "#BDBDBD",
-    borderRadius: 50,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    margin: 8,
-    minWidth: (width - 40 - 64) / 2,
+  option: {
+    flexDirection: "row",
     alignItems: "center",
+    backgroundColor: "#FFFFFF",
+    padding: 20,
+    borderRadius: 16,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
   },
-  tagText: {
-    fontSize: 16,
-    color: "#424242",
+  selectedOption: {
+    backgroundColor: "#3B82F6",
+    borderColor: "#3B82F6",
+  },
+  emoji: {
+    fontSize: 24,
+    marginRight: 16,
+  },
+  optionText: {
+    fontSize: 17,
+    color: "#111827",
+    flex: 1,
+  },
+  selectedOptionText: {
+    color: "#FFFFFF",
+    fontWeight: "bold",
+  },
+  footer: {
+    paddingHorizontal: 20,
+  },
+  footerText: {
+    fontSize: 12,
+    color: "#6B7280",
+    textAlign: "center",
   },
 });
-
-export default OnboardingNewScreen;
