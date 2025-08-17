@@ -5,6 +5,9 @@ export default function EmotionalSupportLayout() {
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="PersonalPathScreen" />
       <Stack.Screen name="ScriptureMotivationScreen" />
+      <Stack.Screen name="ReadingFrequencyScreen" />
+      <Stack.Screen name="StudyChallengeScreen" />
+      <Stack.Screen name="LanguageScreen" />
     </Stack>
   );
 }
