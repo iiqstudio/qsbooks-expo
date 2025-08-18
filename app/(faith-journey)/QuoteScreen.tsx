@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 24,
-    paddingBottom: 24, // Отступ снизу для кнопки
+    paddingBottom: 24,
     justifyContent: "space-between", // Равномерно распределяет контент
   },
   content: {
