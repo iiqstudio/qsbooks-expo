@@ -33,7 +33,6 @@ export default function OnboardingScreen() {
       router.push("/DivineWisdomScreen");
     }
     if (index === 3) {
-      router.push("/ChatScreen");
     }
   };
 
