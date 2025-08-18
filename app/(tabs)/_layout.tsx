@@ -49,14 +49,6 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="home"
-        options={{
-          title: "Test Home",
-          href: null,
-          headerShown: false,
-        }}
-      />
-      <Tabs.Screen
         name="read"
         options={{
           title: "Read",
