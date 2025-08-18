@@ -1,3 +1,4 @@
+import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -32,6 +33,7 @@ interface BookTitles {
 const typedBookTitles: BookTitles = bookTitles;
 
 const RandomQuoteComponent: React.FC = () => {
+  const router = useRouter();
   const [quoteData, setQuoteData] = useState<QuoteData | null>(null);
   const [quoteInfo, setQuoteInfo] = useState<QuoteInfo>({
     bookName: "",
@@ -106,7 +108,7 @@ const RandomQuoteComponent: React.FC = () => {
   };
 
   const discussNavigateHandler = () => {
-    Alert.alert("Навигация в чат", `Контекст: ${quoteData?.quote}`);
+    router.push("/chat");
   };
 
   const handleQuoteClick = () => {

@@ -30,7 +30,7 @@ export default function RootLayout() {
         <Stack.Screen
           name="chat"
           options={{
-            title: "Чат", // Можешь задать заголовок
+            title: "Чат",
             // presentation: 'modal' // Раскомментируй, если хочешь, чтобы он открывался как модальное окно
           }}
         />
