@@ -38,36 +38,36 @@ const DivineWisdomScreen = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#F9F9F7", // Светлый фон, как на изображении
+    backgroundColor: "#F9F9F7",
   },
   container: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 30, // Горизонтальные отступы
+    paddingHorizontal: 30,
   },
   iconContainer: {
     width: 160,
     height: 160,
     borderRadius: 80,
-    backgroundColor: "#E5E7EB", // Светло-серый фон для иконки
+    backgroundColor: "#E5E7EB",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 48, // Отступ снизу
+    marginBottom: 48,
   },
   title: {
     fontSize: 32,
-    fontWeight: "bold", // Жирный шрифт для заголовка
-    color: "#1D2939", // Темный цвет текста
+    fontWeight: "bold",
+    color: "#1D2939",
     textAlign: "center",
-    marginBottom: 16, // Отступ снизу
+    marginBottom: 16,
   },
   subtitle: {
     fontSize: 18,
     fontWeight: "500",
-    color: "#667085", // Серый цвет для подзаголовка
+    color: "#667085",
     textAlign: "center",
-    lineHeight: 28, // Межстрочный интервал
+    lineHeight: 28,
   },
 });
 
