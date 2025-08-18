@@ -21,4 +21,8 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 16,
   },
+  text: {
+    fontSize: 20,
+    marginVertical: 10,
+  },
 });
