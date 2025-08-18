@@ -1,3 +1,4 @@
+import i18n from "@/i18n";
 import { MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
@@ -46,7 +47,7 @@ const RateUsBlock: React.FC = () => {
     <Card style={styles.block} mode="contained">
       <Card.Content>
         <View style={styles.header}>
-          <Text style={styles.title}>Оцените нас</Text>
+          <Text style={styles.title}>{i18n.t("rate")}</Text>
           <TouchableOpacity onPress={handleClose}>
             <MaterialIcons name="close" size={24} color="#969696" />
           </TouchableOpacity>

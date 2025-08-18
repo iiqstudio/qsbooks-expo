@@ -1,4 +1,10 @@
 {
-  "greeting": "Hello, buddy!",
-  "welcomeMessage": "Welcome to my awesome app"
+  "rate": "Rate us",
+  "error": "Error",
+  "close": "Close",
+  "quote": "Quote of the day",
+  "chat": "Chat",
+  "share": "Share",
+  "copy": "Copy",
+  "discuss": "Discuss"
 }

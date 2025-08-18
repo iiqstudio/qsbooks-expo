@@ -1,3 +1,4 @@
+import i18n from "@/i18n";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
@@ -135,7 +136,7 @@ const RandomQuoteComponent: React.FC = () => {
     <View style={styles.container}>
       <Card style={styles.block} mode="contained">
         <Card.Content>
-          <Text style={styles.title}>Цитата дня</Text>
+          <Text style={styles.title}>{i18n.t("quote")}</Text>
           <TouchableOpacity onPress={handleQuoteClick}>
             <Text style={styles.quoteTextContent}>{quoteData?.quote}</Text>
           </TouchableOpacity>
@@ -151,14 +152,14 @@ const RandomQuoteComponent: React.FC = () => {
                 style={styles.chip}
                 onPress={shareNavigateHandler}
               >
-                Поделиться
+                {i18n.t("share")}
               </Chip>
               <Chip
                 textStyle={styles.chipText}
                 style={styles.chip}
                 onPress={discussNavigateHandler}
               >
-                Чат
+                {i18n.t("chat")}
               </Chip>
             </View>
           </View>
