@@ -112,7 +112,7 @@ const RandomQuoteComponent: React.FC = () => {
   };
 
   const handleQuoteClick = () => {
-    Alert.alert("Цитата нажата", `ID: ${quoteData?.id}`);
+    // Alert.alert("Цитата нажата", `ID: ${quoteData?.id}`);
   };
 
   if (isLoading) {
