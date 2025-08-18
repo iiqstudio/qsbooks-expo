@@ -29,6 +29,9 @@ export default function OnboardingScreen() {
     if (index === 1) {
       router.push("/PersonalPathScreen");
     }
+    if (index === 2) {
+      router.push("/DivineWisdomScreen");
+    }
   };
 
   return (
