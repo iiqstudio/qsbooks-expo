@@ -26,6 +26,13 @@ export default function RootLayout() {
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(onboarding)" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="chat"
+          options={{
+            title: "Чат", // Можешь задать заголовок
+            // presentation: 'modal' // Раскомментируй, если хочешь, чтобы он открывался как модальное окно
+          }}
+        />
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />
